@@ -1,37 +1,32 @@
-# image runtime
-# fix audio issues
-# 
-# teach how to use encyption
-# send compiled executable
-
-
 import json, os, gc
 from Cryptodome.Cipher import AES
 from datetime import datetime
 from time import sleep
 
-logo = "MarvinLogo.png"
+logo = "MarvinLogo"
 key = b'Die-go is hella gay lmao'  # must be 16, 24, or 32 chars
 vulnNonce = ''                     # change everytime the encryption is done again
 penNonce = ''
+engineRoot = 'ScoringEngine/'
 
 if os.name=='nt':
     from win10toast import ToastNotifier
     import winsound
-    engineRoot = "C:/ScoringEngine/"
+    engineRoot = f"C:/{engineRoot}"
+    logo += '.ico'
 
     def play(path):
         winsound.PlaySound(path, winsound.SND_ALIAS)
 
     def banner(message):
-        bubbleBase = ToastNotifier()
-        bubbleBase.show_toast("PolyCP Engine", message, icon_path=(engineRoot + logo))
+        (ToastNotifier()).show_toast("PolyCP Engine", message, icon_path=(engineRoot + logo))
 
     def check(test):
         return f"{test[1]}\n"==os.popen(test[0]).read()
 elif os.name=='posix':
     os.system("sudo apt install -y sox")
-    engineRoot = "/ScoringEngine/"
+    engineRoot = f"/{engineRoot}"
+    logo += '.png'
 
     def play(path):
         os.system(f"play {engineRoot + path}")
@@ -67,7 +62,7 @@ class machine:
             for penalty in penalties:
                 self.Penalties += penalty
   
-state = machine()
+vm = machine()
 
 class scoringTemplate:
     Vulns = []
@@ -99,13 +94,13 @@ class scoringTemplate:
 
 scoredItems = scoringTemplate()
 
-def updateReport():
+def updateReport(items, state):
     genTime = datetime.now()
     penalties = ""
-    for penalty in scoredItems.Penalties:
+    for penalty in items.Penalties:
         penalties += f"{penalty['title']} - {penalty['value']} <br /> \n"
     vulns = ""
-    for vuln in scoredItems.Vulns:
+    for vuln in items.Vulns:
         vulns += f"{vuln['title']} - {vuln['value']} <br /> \n"
     page = f"""
 <!DOCTYPE html>
@@ -142,16 +137,16 @@ def updateReport():
                 <img src="CYBERPATRIOT_Logo_black.png"> <br />
                 <h1 id="imageTitle">PolyCP {state.Round} {state.ImageType} Image</h1> <br />
                 <h2 id="genTime">Report Generated At: {genTime}</h2> <br />
-                <h2 id="score">{scoredItems.Gain - scoredItems.Loss} out of {state.maxScore} points recieved</h2> <br />
+                <h2 id="score">{items.Gain - items.Loss} out of {state.maxScore} points recieved</h2> <br />
             </div>
             <br /><br /><br />
             <div id="main">
-                <b>{len(scoredItems.Penalties)} penalties assessed, for a loss of {scoredItems.Loss} points:</b> <br />
+                <b>{len(items.Penalties)} penalties assessed, for a loss of {items.Loss} points:</b> <br />
                 <br />
                 <span style="color: red;"> {penalties} </span>
                 <br /><br />
                 <br />
-                <b>{len(scoredItems.Vulns)} out of {len(state.Vulns)} scored security issues fixed, for a gain of {scoredItems.Gain} points: </b> <br />
+                <b>{len(items.Vulns)} out of {len(state.Vulns)} scored security issues fixed, for a gain of {items.Gain} points: </b> <br />
                 <br />
                 {vulns}
                 <br />
@@ -166,7 +161,7 @@ def updateReport():
     
 
 while True:
-    for vuln in state.Vulns:
+    for vuln in vm.Vulns:
         if vuln in scoredItems.Vulns:
             # already solved case
             if not(check(vuln['test'])):
@@ -178,14 +173,14 @@ while True:
                 # add the vuln if they solved it
                 scoredItems.AddVuln(vuln['title'], vuln['value'])
     # again for penalties
-    for penalty in state.Penalties:
+    for penalty in vm.Penalties:
         if penalty in scoredItems.Penalties:
             if not(check(penalty['test'])):
                 scoredItems.RemovePenalty(penalty['title'], penalty['value'])
         else:
             if check(penalty['test']):
                 scoredItems.AddPenalty(penalty['title'], penalty['value'])
-    updateReport()
+    updateReport(scoredItems, vm)
     sleep(60)
   
 # [
