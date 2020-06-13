@@ -1,4 +1,4 @@
-import json, os, gc
+import json, os
 from Cryptodome.Cipher import AES
 from datetime import datetime
 from time import sleep
@@ -41,11 +41,22 @@ class machine:
     ImageType = ""
     Round = ""
     maxScore = 0
+    startTime = None
     Vulns = []
     Penalties = []
     def __init__(self, imType="", round="Practice Round", vulnPath=(engineRoot + "vulns"), penaltyPath=(engineRoot + "penalties")):
         self.ImageType = imType
         self.Round = round
+
+        # setting the image start time
+        if not os.path.isfile(engineRoot + "ScoringReport.html"):
+            startTimeLog = open( (engineRoot + "ScoringReport.html"), "w")
+            startTimeLog.write(str(datetime.now().utcnow()))
+            startTimeLog.close()
+        startTimeLog = open( (engineRoot + "ScoringReport.html"), "r")
+        self.startTime = startTimeLog.readlines()
+        startTimeLog.close()
+
         # loading in vulns
         vulnFile = open(vulnPath, 'rb')
         vulnData = ( AES.new(key, AES.MODE_EAX, nonce=vulnNonce) ).decrypt(vulnFile.readlines())
@@ -54,6 +65,7 @@ class machine:
             for vuln in vulns:
                 self.Vulns += vuln
                 self.maxScore += vuln["value"]
+
         # loading in penalties
         penFile = open(penaltyPath, 'rb')
         penData = ( AES.new(key, AES.MODE_EAX, nonce=penNonce) ).decrypt(penFile.readlines())
@@ -130,6 +142,15 @@ def updateReport(items, state):
                 height: 180px;
             }}
         </style>
+        <script>
+            var imageStartTime = new Date({vm.startTime});
+            setInterval(function() {{
+                var now = new Date().getTime();
+                var hours = Math.floor((now - imageStartTime) / (1000 * 60 * 60)) 
+                var mins = Math.floor((now - imageStartTime) % (1000 * 60 * 60) / (1000 * 60))
+                document.getElementById("imageTimer").innerHTML = hours + ":" + mins 
+            }}, 1000)
+        </script>
     </head>
     <body>
         <div id="content">
@@ -137,6 +158,7 @@ def updateReport(items, state):
                 <img src="CYBERPATRIOT_Logo_black.png"> <br />
                 <h1 id="imageTitle">PolyCP {state.Round} {state.ImageType} Image</h1> <br />
                 <h2 id="genTime">Report Generated At: {genTime}</h2> <br />
+                <h3>Approximate Image running Time: <span id="imageTimer"></span> </h3>
                 <h2 id="score">{items.Gain - items.Loss} out of {state.maxScore} points recieved</h2> <br />
             </div>
             <br /><br /><br />
@@ -181,31 +203,32 @@ while True:
             if check(penalty['test']):
                 scoredItems.AddPenalty(penalty['title'], penalty['value'])
     updateReport(scoredItems, vm)
-    sleep(60)
+    sleep(30)
   
-# [
-#  {
-#    "test": ["powershell -c \"(glu nalso).enabled\"", "True"],
-#    "title": "User Nasloon is enabled",
-#    "value": 10
-#  },
-#  {
-#    "test": ["powershell -c \''\", ""],
-#    "title": "",
-#    "value": 10
-#  },
-#  {
-#    "test": ["powershell -c \"-not (glu administrator).enabled\"", "False"],
-#    "title": "Removed Unauthorized Admin",
-#    "score": 10
-#  }
-# ]
+###
+    # [
+    #  {
+    #    "test": ["powershell -c \"(glu nalso).enabled\"", "True"],
+    #    "title": "User Nasloon is enabled",
+    #    "value": 10
+    #  },
+    #  {
+    #    "test": ["powershell -c \''\", ""],
+    #    "title": "",
+    #    "value": 10
+    #  },
+    #  {
+    #    "test": ["powershell -c \"-not (glu administrator).enabled\"", "False"],
+    #    "title": "Removed Unauthorized Admin",
+    #    "score": 10
+    #  }
+    # ]
 
 
-# encrypt a json file:
-# from Cryptodome.Cipher import AES
-# key = b'Die-go is hella gay lmao'
-# cipher = AES.new(key, AES.MODE_EAX)
-# (pls check nonce {cipher.nonce})
-# ciphertext, tag = cipher.encrypt_and_digest(data_string)
-# then write ciphertext to the file (vulns or penalties)
+    # encrypt a json file:
+    # from Cryptodome.Cipher import AES
+    # key = b'Die-go is hella gay lmao'
+    # cipher = AES.new(key, AES.MODE_EAX)
+    # (pls check nonce {cipher.nonce})
+    # ciphertext, tag = cipher.encrypt_and_digest(data_string)
+    # then write ciphertext to the file (vulns or penalties)
