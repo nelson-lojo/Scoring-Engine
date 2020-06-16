@@ -5,8 +5,8 @@ from time import sleep
 
 logo = "MarvinLogo"
 key = b'Die-go is hella gay lmao'  # must be 16, 24, or 32 chars
-vulnNonce = ''                     # change everytime the encryption is done again
-penNonce = ''
+vulnNonce = None                   # change everytime the encryption is done again
+penNonce = None
 engineRoot = 'ScoringEngine/'
 
 if os.name=='nt':
@@ -20,9 +20,6 @@ if os.name=='nt':
 
     def banner(message):
         (ToastNotifier()).show_toast("PolyCP Engine", message, icon_path=(engineRoot + logo))
-
-    def check(test):
-        return f"{test[1]}\n"==os.popen(test[0]).read()
 elif os.name=='posix':
     os.system("sudo apt install -y sox")
     engineRoot = f"/{engineRoot}"
@@ -32,11 +29,27 @@ elif os.name=='posix':
         os.system(f"play {engineRoot + path}")
 
     def banner(message):
-        os.system(f"notify-send 'PolyCP Engine', {message} -i {engineRoot + logo}")
+        os.system(f"notify-send 'PolyCP Engine' '{message}' -i '{engineRoot + logo}'")
 
-    def check(test):
-        return test[1]==os.popen(test[0]).read()
-    
+def check(test):
+    return f"{test[1]}\n"==os.popen(test[0]).read()
+
+def log(content, error=''):
+    logFile = open(engineRoot + "log.txt", "a")
+
+    def event(content):
+        logFile.write(content)
+
+    def fatalError(content):
+        logFile.write(f"Engine exiting due to fatal error: {content}" )
+
+    contentKey = { 
+                    '' : event,
+                    'ferror' : fatalError 
+                 }
+    contentKey[error]()
+    logFile.close()
+
 class machine:
     ImageType = ""
     Round = ""
@@ -49,31 +62,47 @@ class machine:
         self.Round = round
 
         # setting the image start time
-        if not os.path.isfile(engineRoot + "ScoringReport.html"):
-            startTimeLog = open( (engineRoot + "ScoringReport.html"), "w")
-            startTimeLog.write(str(datetime.now().utcnow()))
+        if not os.path.isfile(engineRoot + "imageTime.dat"):
+            startTimeLog = open( (engineRoot + "imagetime.dat"), "w")
+            try:
+                startTimeLog.write(str(datetime.now().utcnow()))
+            except:
+                log("Could not write image start time to file")
+            finally:
+                startTimeLog.close()
+        startTimeLog = open( (engineRoot + "imagetime.dat"), "r")
+        try:
+            self.startTime = startTimeLog.readlines()
+        except:
+            log("Could not read image start time.")
+        finally:
             startTimeLog.close()
-        startTimeLog = open( (engineRoot + "ScoringReport.html"), "r")
-        self.startTime = startTimeLog.readlines()
-        startTimeLog.close()
 
         # loading in vulns
         vulnFile = open(vulnPath, 'rb')
         vulnData = ( AES.new(key, AES.MODE_EAX, nonce=vulnNonce) ).decrypt(vulnFile.readlines())
         vulnFile.close()
-        with json.loads(vulnData.decode("utf-8")) as vulns:
-            for vuln in vulns:
-                self.Vulns += vuln
-                self.maxScore += vuln["value"]
+        try:
+            with json.loads(vulnData.decode("utf-8")) as vulns:
+                for vuln in vulns:
+                    self.Vulns += vuln
+                    self.maxScore += vuln["value"]
+        except: 
+            log("Vuln data is not in JSON format", 'ferror')
+            exit()
 
         # loading in penalties
         penFile = open(penaltyPath, 'rb')
         penData = ( AES.new(key, AES.MODE_EAX, nonce=penNonce) ).decrypt(penFile.readlines())
         penFile.close()
-        with json.loads(penData.decode("utf-8")) as penalties:
-            for penalty in penalties:
-                self.Penalties += penalty
-  
+        try:
+            with json.loads(penData.decode("utf-8")) as penalties:
+                for penalty in penalties:
+                    self.Penalties += penalty
+        except: 
+            log("Penalty data is not in JSON format")
+            exit()
+
 vm = machine()
 
 class scoringTemplate:
@@ -180,7 +209,6 @@ def updateReport(items, state):
     report = open(engineRoot + "ScoringReport.html", "w")
     report.write(page)
     report.close()
-    
 
 while True:
     for vuln in vm.Vulns:
@@ -204,7 +232,7 @@ while True:
                 scoredItems.AddPenalty(penalty['title'], penalty['value'])
     updateReport(scoredItems, vm)
     sleep(30)
-  
+
 ###
     # [
     #  {
