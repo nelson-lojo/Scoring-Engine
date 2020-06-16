@@ -2,7 +2,7 @@ import json, os
 from Cryptodome.Cipher import AES
 from datetime import datetime
 from time import sleep
-
+ 
 logo = "MarvinLogo"
 key = b'Die-go is hella gay lmao'  # must be 16, 24, or 32 chars
 vulnNonce = None                   # change everytime the encryption is done again
