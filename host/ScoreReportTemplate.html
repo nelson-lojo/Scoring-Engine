@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PolyCP Scoring Report</title>
+        <style>
+            body {{
+                background-color: #336699;
+                font-family: Arial, Verdana, sans-serif;
+            }}
+            #content {{
+                background-color: white;
+                width: 70%;
+                margin-left: auto;
+                margin-right: auto;
+                padding: 10px;
+                height: 100%;
+				border-radius: 12px;
+            }}
+            #barz {{
+                text-align: center;
+                line-height: 16px;
+                margin: 0;
+            }}
+            img {{
+                height: 180px;
+            }}
+        </style>
+        <script>
+            var imageStartTime = new Date({startTime});
+            setInterval(function() {{
+                var now = new Date().getTime();
+                var hours = Math.floor((now - imageStartTime) / (1000 * 60 * 60)) 
+                var mins = Math.floor((now - imageStartTime) % (1000 * 60 * 60) / (1000 * 60))
+                document.getElementById("imageTimer").innerHTML = hours + ":" + mins 
+            }}, 1000)
+        </script>
+    </head>
+    <body>
+        <div id="content">
+            <div id="barz">
+                <img src="CYBERPATRIOT_Logo_black.png"> <br />
+                <h1 id="imageTitle">PolyCP {competition} {imageType} Image</h1> <br />
+                <h2 id="genTime">Report Generated At: {timestamp}</h2> <br />
+                <h4>Connection Status: {connection} </h4>
+                <h3>Approximate Image running Time: <span id="imageTimer"></span> </h3>
+                <h2 id="score">{score} out of {maximumScore} points recieved</h2> <br />
+            </div>
+            <br /><br /><br />
+            <div id="main">
+                <b>{penNum} penalties assessed, for a loss of {loss} points:</b> <br />
+                <br />
+                <span style="color: red;"> {penList} </span>
+                <br /><br />
+                <br />
+                <b>{vulnsFound} out of {vulnsTotal} scored security issues fixed, for a gain of {gain} points: </b> <br />
+                <br />
+                {vulnList}
+                <br />
+                <br />
+            </div>
+        </div>
+    </body>
+</html>
