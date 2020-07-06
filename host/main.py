@@ -127,7 +127,7 @@ class machine:
             exit()
 
     def check(self, test):
-        return f"{test[1]}\n"==os.popen(test[0]).read()
+        return f"{test[1]}\n" == os.popen(test[0]).read()
 
 vm = machine(imSystem=startingInfo['os'], round=startingInfo['round'], 
             vulnPath=(engineRoot + "vulns"), penaltyPath=(engineRoot + "penalties"))
