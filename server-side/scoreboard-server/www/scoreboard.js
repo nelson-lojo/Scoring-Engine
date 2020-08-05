@@ -1,140 +1,147 @@
 var fetchedTeams = 0;
-var fetchIncrement = 35;
+var FETCH_INCREMENT = 15; // temporarily lowered for testing, will be between 100 and 200
 var competition = null;
 var division = null;
 
-// when the page first loads, load 35 teams #*
 // send them to a team page #*
-// load teams when they scroll #*
 
-
-
-
-// when a value for competition is entered, update divisions dropdown
+// data for when a value for competition is entered 
+//     to update divisions dropdown
 var organization = {
-    "comp 1" : ["div 1", "div 2"],
-    "comp 2" : ["div 1", "div 2", "div 3"]
+    "Something went wrong. Refresh your browser." : ["Something went wrong. Refresh your browser."]
 };
 
-/*
-    var compDrop = document.createElement("div")
-    compDrop.id = "compDropdown";
-    compDrop.className = "dropdown";
+// grab the current competition info
+var compFetch = new XMLHttpRequest();
+compFetch.open('GET', window.location.href + "/comps");
+compFetch.onload = () => {
+    organization = JSON.parse(compFetch.responseText);
+};
+compFetch.send(null);
 
-    var compSearchbox = document.createElement("input");
-    compSearchbox.type = 'text';
-    compSearchbox.placeholder = "Search";
-    compSearchbox.size = 16;
-    compSearchbox.list = "compSearch";
-    compDrop.appendChild(compSearchbox);
-
-    var compList = document.createElement("datalist");
-    compList.id = "compSearch";
-    for (i = 0; i < organization.length; i++) {
-        var op = document.createElement('option');
-        op.value = organization[i];
-        compList.appendChild(op);
-    }
-    compDrop.appendChild(compList);
-
-    document.getElementById("dropdowns").appendChild(compDrop); 
-// */
+var scoreboardHeader = '<thead>' 
+    + '<th>Team ID</th>' 
+    + '<th>Competition</th>' 
+    + '<th>Division</th>' 
+    + '<th>Play Time</th>' 
+    + '<th>Score</th>' 
+    + '<th>Warning(s)</th>' 
+    + '</thead>';
 
 
 window.addEventListener('load', (event) => {
     // toggle showing search for competitions 
-    var compDroppy = document.getElementById("compDropdown");
+    var compDropdown = document.getElementById("compDropdown");
     var compButton = document.getElementById("compButton");
-    if (compDroppy && compButton) {
+    if (compDropdown && compButton) {
         compButton.addEventListener('click', (event) => {
-            if (compDroppy.style.display === 'none') {
-                compDroppy.style.display = "block";
-                compDroppy.getElementsByTagName('input')[0].focus();
+            if (compDropdown.style.display === 'none') {
+                compDropdown.style.display = "block";
+                compDropdown.getElementsByTagName('input')[0].focus();
             } else {
-                compDroppy.style.display = "none";
+                compDropdown.style.display = "none";
             }
         });
-        compDroppy.style.display = 'none';
+        compDropdown.style.display = 'none';
     }
 
     // toggle showing search for divisions 
-    var divDroppy = document.getElementById("divDropdown");
+    var divDropdown = document.getElementById("divDropdown");
     var divButton = document.getElementById("divButton");
-    if (divDroppy && divButton) {
+    if (divDropdown && divButton) {
         divButton.addEventListener('click', (event) => {
-            if (divDroppy.style.display === 'none') {
-                divDroppy.style.display = 'block';
-                divDroppy.getElementsByTagName('input')[0].focus();
+            if (divDropdown.style.display === 'none') {
+                divDropdown.style.display = 'block';
+                divDropdown.getElementsByTagName('input')[0].focus();
             } else {
-                divDroppy.style.display = 'none';
+                divDropdown.style.display = 'none';
             }
         });
-        divDroppy.style.display = 'none';
+        divDropdown.style.display = 'none';
     }
 
-    if (compDroppy) {
-        compDroppy.addEventListener('input', (event) => {
-            if (compDroppy.getElementsByTagName('input')[0].value in organization) {
+    // load `increment` teams to the list when the page loads #*
+    refreshTeams(FETCH_INCREMENT);
+
+
+    if (compDropdown) {
+        compDropdown.addEventListener('input', (event) => {
+            var input = compDropdown.getElementsByTagName('input')[0].value;
+            if (input in organization) {
                 // update the choices in divisions search when competitions search has a valid choice
-                var list = organization[compDroppy.getElementsByTagName('input')[0].value];
-                var cont = ''
+                var list = organization[input];
+                var cont = '';
+                // build list of divisions in entered competition
                 for (i = 0; i < list.length; i++) {
                     cont += '<option value="' + list[i] + '">\n'
                 }
-                divDroppy.getElementsByTagName('datalist')[0].innerHTML = cont
-                divDroppy.getElementsByTagName('input')[0].placeholder = "Search"
+                divDropdown.getElementsByTagName('datalist')[0].innerHTML = cont;
+                divDropdown.getElementsByTagName('input')[0].placeholder = "Search";
 
-                // refresh list of teams
-                document.getElementsByTagName('table')[0].innerHTML = '<thead>' 
-                        + '<th>Team ID</th>' 
-                        + '<th>Competition</th>' 
-                        + '<th>Division</th>' 
-                        + '<th>Play Time</th>' 
-                        + '<th>Score</th>' 
-                        + '<th>Warning(s)</th>' 
-                        + '</thead>';
-
-                // loadTeams
-                // #*
+                // refresh list of teams upon entry of a valid competition
+                refreshTeams(FETCH_INCREMENT);
             } else {
-                if (divDroppy) {
-                    divDroppy.getElementsByTagName('input')[0].placeholder = "Choose a valid Competition";
-                    divDroppy.getElementsByTagName('datalist')[0].innerHTML = '';
+                if (divDropdown) {
+                    divDropdown.getElementsByTagName('input')[0].placeholder = "Choose a valid Competition";
+                    divDropdown.getElementsByTagName('datalist')[0].innerHTML = '';
                 }
             }
         });
+        if (divDropdown) {
+            divDropdown.addEventListener('input', (event) => {
+                // refresh list of teams upon entry of a valid combination of competition and division
+                var comp = compDropdown.getElementsByTagName('input')[0].value;
+                if ( (comp in organization) && (divDropdown.getElementsByTagName('input'[0]) in organization[comp]) ) {
+                    refreshTeams(FETCH_INCREMENT);
+                }
+            });
+        }
     }
 });
 
+// load more teams when they scroll to the bottom
+window.addEventListener('scroll', (event) => {
+    var scoreboard = document.getElementsByTagName('table')[0];
+    if (scoreboard) {
+        // check if they've reached the bottom and load more teams
+        if ( (window.scrollY + window.innerHeight) >= document.body.offsetHeight ) {
+            scoreboard.innerHTML+= loadTeams(FETCH_INCREMENT);
+        }
+    }
+});
 
-// on the entrance of a competition value or division value
-// document.getElementById("").addEventListener('input', (event) => {
-//     // send another request: loadTeams(newComp/newDiv) #*
-// });
+function loadTeams(amount) {
+    var fetch = new XMLHttpRequest();
+    fetch.open('POST', window.location.href + '/teams?competition=' + competition + '&division=' + division, false); 
+    fetch.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    fetch.onload = () => {
+        if(this.status == 200) {
+            content = JSON.parse(fetch.responseText);
+            table = '';
+            // build table with teams
+            for (team of content) {
+                playtime = team.endTime - team.startTime;  // make sure these are date objects #* 
+                table += '<tr>' +
+                    '<td>' + team.num + '</td>' +
+                    '<td>' + team.competition + '</td>' +
+                    '<td>' + team.division + '</td>' +
+                    '<td>' + playtime.getHours() + ':' + playtime.getMinutes() + '</td>' +
+                    '<td>' + team.score + '</td>' +
+                    '<td>' + team.warnings + '</td>' +
+                    '</tr>';
+            }
+            return table;
+        }
+    };
 
-// function loadTeams() {
-//     var fetch = new XMLHttpRequest();
-//     fetch.open('POST', window.location.href + '/teams?competition=' + competition + '&division='+ division); 
-//     fetch.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-//     fetch.onload = function() {
-//         if(this.status == 200) {
-//             content = JSON.parse(fetch.responseText);
-//             table = ''
-//             playtime = team.endTime - team.startTime  // make sure this are date objects #* 
-//             for (team of content) {
-//                 table += '<tr>' +
-//                     '<td>' + team.num + '</td>' +
-//                     '<td>' + team.competition + '</td>' +
-//                     '<td>' + team.division + '</td>' +
-//                     '<td>' + playtime.getHours() + ':' + playtime.getMinutes() + '</td>' +
-//                     '<td>' + team.score + '</td>' +
-//                     '</tr>'
-//             }
-//             document.getElementsByTagName('table')[0].innerHTML += fetch.responseText
-//         }
-//     };
+    fetch.send("loaded=" + fetchedTeams + "&increment=" + amount);
+    fetchedTeams += amount;
+}
 
-//     fetch.send("loaded=" + fetchedTeams);
-//     fetchedTeams += fetchIncrement;
-// }
-
+// reset the table of teams and load a new set of `initCount` teams
+function refreshTeams(initCount) {
+    var scoreboard = document.getElementsByTagName('table')[0];
+    scoreboard.innerHTML = scoreboardHeader;
+    fetchedTeams = 0;
+    scoreboard.innerHTML += loadTeams(initCount);
+}
