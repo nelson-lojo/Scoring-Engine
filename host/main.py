@@ -1,4 +1,6 @@
-import json, os, socket
+import os, tkinter
+from socket import socket, AF_INET, SOCK_STREAM
+from json import loads
 from Cryptodome.Cipher import AES
 from datetime import datetime
 from time import sleep
@@ -12,7 +14,7 @@ startingInfo = {
     'engineRoot' : 'ScoringEngine/',
     'scoreboard' : ('ip/dns', int('port')),
     'os' : 'GenericSystem18.04',     # cannot have spaces
-    'round' : "Practice Round"       # purely visual
+    'round' : "Practice Round"       # purely visual, but should also 
 }
 
 logo = startingInfo['logo']
@@ -59,7 +61,36 @@ def log(content, error=''):
     logFile.close()
 
 def getTeamID():
-    pass
+    window = tkinter.Tk()
+    window.geometry("350x100")
+    #window.iconbitmap(engineRoot + startingInfo['logo'] + '.ico')
+    window.title("Enter your Team ID")
+    window.resizable(0,0)
+    
+    teamID= tkinter.StringVar()
+
+    bruh = tkinter.Entry(window, textvar=teamID, width=12, font=("arial",35,"bold"))
+    bruh.place(relx=0.5)
+    bruh.pack()    
+    
+    def character_limit(teamID):
+        if len(teamID.get()) > 12:
+            teamID.set(teamID.get()[:12])
+        elif len(teamID.get()) == 12:
+            submit.config(state=tkinter.NORMAL)
+        else:
+            submit.config(state=tkinter.DISABLED)
+        if not teamID.get().isalnum():
+            teamID.set(teamID.get()[:-1])
+
+    submit = tkinter.Button(window, text="Submit", width=12, bg="blue", borderwidth=0, fg="white", 
+            command=window.destroy, font=("arial",10,"bold"), state=tkinter.DISABLED)
+    submit.place(relx=0.5, rely=0.8, anchor=tkinter.CENTER)
+    
+    teamID.trace("w", lambda *args: character_limit(teamID))
+
+    window.mainloop()
+    return teamID.get()
 
 class machine:
     def __init__(self, imSystem="", round="Practice Round", 
@@ -78,7 +109,7 @@ class machine:
         if not os.path.isfile(engineRoot + "image.dat"):
             persistentData = open( (engineRoot + "image.dat"), "w")
             try:
-                persistentData.write(str(datetime.now().utcnow()))
+                persistentData.write(str(datetime.utcnow()))
                 persistentData.write(getTeamID())
             except:
                 log("Could not write image image data to file")
@@ -105,7 +136,7 @@ class machine:
                         ).decrypt(vulnFile.readlines())
         vulnFile.close()
         try:
-            with json.loads(vulnData.decode("utf-8")) as vulns:
+            with loads(vulnData.decode("utf-8")) as vulns:
                 for vuln in vulns:
                     self.Vulns += vuln
                     self.maxScore += vuln["value"]
@@ -119,7 +150,7 @@ class machine:
                     ).decrypt(penFile.readlines())
         penFile.close()
         try:
-            with json.loads(penData.decode("utf-8")) as penalties:
+            with loads(penData.decode("utf-8")) as penalties:
                 for penalty in penalties:
                     self.Penalties += penalty
         except: 
@@ -215,7 +246,7 @@ class scoredItems:
             template.close()
 
 def upload(teamID, imID, vmOS, startTime, score, foundVulns):
-    localSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    localSocket = socket(AF_INET, SOCK_STREAM)
     try:
         localSocket.connect(startingInfo['scoreboard'])
         localSocket.send(f"{teamID} {imID} {vmOS} {startTime} {score} {foundVulns}")

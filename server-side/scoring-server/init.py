@@ -1,11 +1,13 @@
+from data import info, dbInfo, divisions
 import pymongo
-from data import dbInfo, divisions
 
 db = pymongo.MongoClient( dbInfo['ip'], dbInfo['port'] ) [dbInfo['name']]
 
 db.competitions.insert_one({ 
+    'name' : info['competitionName'],
     'divisions' : [
         {
+            'name' : div[ : -( 1 + info['divIDLen'] ) ],
             'teams' : divisions[div][0],
             'images' : list( divisions[div][1:] )
         } 
@@ -13,13 +15,18 @@ db.competitions.insert_one({
     ]
 })
 
-teamCollection = db.teams
-
-teamCollection.insert_one({
-    'uid' : '0000-0000-0000',
-    'num' : 0,
-    'division' : 'plat'
+db.teams.insert_one({
+    'uid' : '000000000000',
+    'num' : '0000',
+    'score' : -1
 })
 
-teamCollection.create_index( [('num', pymongo.ASCENDING)], unique=True, name='unique_nums' )
-teamCollection.create_index( [('uid', pymongo.DESCENDING)], unique=True, name='unique_uids' )
+db.teams.create_index( 
+    [('uid', pymongo.DESCENDING), ('competition', pymongo.DESCENDING)], 
+    unique=True, name='one_team_uid_per_comp' )
+db.teams.create_index(
+    [('num', pymongo.DESCENDING), ('competition', pymongo.DESCENDING)],
+    unique=True, name='one_team_num_per_comp')
+db.teams.create_index( 
+    [('competition', pymongo.DESCENDING), ('division', pymongo.DESCENDING)], 
+    unique=True, name='one_div_per_comp' )
