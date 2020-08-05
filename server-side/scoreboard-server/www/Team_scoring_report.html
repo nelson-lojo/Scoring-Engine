@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="Team_scoring_report.css">
+        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+        <script src="Team_scoring_report.js" type="text/javascript"></script> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>11-1828 Scoring Report</title>
+        <link rel="icon" href="polycp.ico">
+    </head>
+    <body>
+        <div id="page">
+            <div id="menu"> 
+                <div id="logo"> 
+                    <img src="logoLong.png" alt="Competition Host Logo">
+                </div>
+                <div id="hotbar">
+                    <div class="filterButton" id="compButton">
+                        <a>Competition</a>
+                    </div> 
+
+                    <div class="filterButton" id="divButton">
+                        <a>Division</a>
+                    </div>
+                </div>
+            </div>
+            <div id="content"> <!-- the white box -->
+                <br />
+                <div id="header">
+                    <h1> CyberPatriot Scoreboard </h1>
+                    <h3> Generated At: <span id="gentime"></span> </h3>
+                    <p id="disclaimer" class="description"> <i>
+                        The scores shown on this page have not been officially 
+                        verified and are provided for reference purposes only.
+                        Displayed scores may not include penalties or other lost 
+                        points. Official scores are published by the CyberPatriot
+                        Program Office during the week following each round of 
+                        competition.
+                        </i>
+                    </p>
+                </div>
+                <p id="warningKey" class="description">
+                    *Warning Key:<br/>
+                    <b>M</b> = Multiple Instances Detected
+                </p>
+                <div id="tables"> 
+                    <table id="teamInfo"> 
+                        <thead>
+                            <tr>
+                                <th>Team Number</th>
+                                <th>Division</th>
+                                <th>Scored Images</th>
+                                <th>Play Time</th>
+                                <th>Total Score</th>
+                                <th>*Warnings</th> 
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>11-1828</td>
+                                <td>Platinum_hs</td>
+                                <td>2</td>
+                                <td>5:54</td>
+                                <td>174</td>
+                                <td>M</td>
+                            <tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <table id="Images_Information">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Time</th>
+                                <th>Found</th>
+                                <th>Remaining</th>
+                                <th>Penalties</th>
+                                <th>Score</th>
+                                <th>*Warn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Ubuntu14</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>1</td>
+                                <td>90</td>
+                                <td>M</td>
+                            </tr>
+                            <tr>
+                                <td>Windows10</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>0</td>
+                                <td>84</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="Scoreboard"> </div>
+            </div>
+        </div>
+        <div id="credits">
+            <p> &copy;PolyCP (not actually copyrighted)</p>
+        </div>
+    </body>
+    <noscript> This content requires Javascript to function. </noscript>
+</html>

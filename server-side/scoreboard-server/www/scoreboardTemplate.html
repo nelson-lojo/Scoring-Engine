@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head> 
+        <link rel="stylesheet" href="scoreboard.css">
+        <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>-->
+        <link rel="icon" href="polycp.ico">
+        <title>{Organization} Scoreboard </title>
+    </head>
+    <body>
+        <div id="page"> 
+            <!--The whole top part (with the logo and the hotbar)-->
+            <div id="menu"> 
+                <div id="logo"> 
+                    <img src="logoLong.png" alt="Competition Host Logo">
+                </div>
+                <div id="hotbar">
+                    <div class="filterButton" id="compButton">
+                        <a>Competition</a>
+                    </div> 
+
+                    <div class="filterButton" id="divButton">
+                        <a>Division</a>
+                    </div>
+                </div>
+            </div>
+            <div id="dropdowns">
+                <div id="compDropdown" class="dropdown">
+                    <input type="text" list="compSearch" placeholder="Search" size=16>
+                    <datalist id="compSearch">
+                        <!--{% for comp in competitions %}
+                        <option value="{{comp}}">
+                        {% endfor %}-->
+                        <option value="comp 2">
+                        <option value="comp 1">
+                    </datalist>                        
+                </div>
+                <div id="divDropdown" class="dropdown">
+                    <input type="text" list="divSearch" placeholder="Choose a valid Competition" size=16>
+                    <datalist id="divSearch">
+                        <!--{% for div in divisions %}
+                        <option value="{{div}}">
+                        {% endfor %}-->
+                    </datalist>                        
+                </div>
+            </div>
+            
+            <!--The desired list of teams ordered by score (default: all)-->
+            <div id="listing"> 
+                <table> 
+                    <thead>
+                        <th>Team ID</th>
+                        <th>Competition</th>
+                        <th>Division</th>
+                        <th>Play Time</th>
+                        <th>Score</th>
+                        <th>Warning(s)</th>
+                    </thead> <!--
+                    <tr>
+                        <td>WW-WW-WWW-WWW</td>
+                        <td>very </td>
+                        <td>Smith</td> 
+                        <td>M,T</td>
+                        <td>5:42</td>
+                        <td>50</td>
+                    </tr>-->
+                </table>
+            </div>
+        </div>
+        <!--Credits to the devs of this implementation of the engine-->
+        <div id="credits"> 
+            <!--<p style='text-align: right;'>--> 
+            <p> &copy;PolyCP (not actually copyrighted)</p>
+
+        </div>
+        <script src="scoreboard.js" type="text/javascript"></script>
+    </body>
+</html>

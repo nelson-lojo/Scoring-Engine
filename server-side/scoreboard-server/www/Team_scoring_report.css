@@ -1,0 +1,220 @@
+body{
+    background: url("background.jpg");
+    background-attachment: fixed;
+    background-size: cover; 
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    padding: 0;
+    margin: 0; 
+}
+
+#page {
+    width: min(60%, 800px);
+    margin: auto;
+}
+
+#menu {
+    backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0.3);
+    overflow: auto;
+}
+
+#logo {
+    width: 100%-20px;
+    padding: 10px;
+}
+
+#hotbar {
+    width: 100%;
+}
+
+.filterButton {
+    width: 130px;
+    height: 30px;
+    margin-left: 10px;
+    float: left;
+    white-space: nowrap;
+    text-align: center;
+    cursor: pointer;
+}
+
+.filterButton a {
+    vertical-align: middle;
+    line-height: 30px;
+    color: white;
+    font-weight: 300;
+}
+
+.filterButton:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+.dropdown {
+    width: 9em;
+    padding-top: 0%;
+    padding-bottom: 0%;
+    padding-right: 30px;
+    float: left;
+}
+
+#content{
+    background: white;
+    height: 100%;
+    width: 100%;
+    /* border-radius: 10px; */
+    background-repeat: repeat-y;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+    margin-bottom: 80px;
+}
+
+#header {
+    text-align: center;
+}
+
+#disclaimer {
+    width: 80%;
+    text-align: center;
+    margin: auto;
+}
+
+p.description{
+    font-size: 12.5px;
+}
+
+#warningKey {
+    margin-left: 10px;
+}
+
+#tables {
+    margin: 20px;
+}
+
+#teamInfo {
+    width: 85%;
+    margin-bottom: 20px;
+}
+
+#tables table, th, td {
+    border: 3px solid black;
+    border-collapse: collapse;
+}
+
+#tables table {
+    margin: 0 auto;
+    box-shadow: 10px 10px 5px #aaaaaa; 
+}
+
+#tables th {
+    padding: 4px;
+    color: white;
+}
+
+#tables td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#tables tbody tr:nth-child(odd){
+    background-color: rgb(86, 170, 255);
+} 
+#tables tbody tr:nth-child(even){
+    background: rgb(173, 211, 250);
+}
+
+#tables thead tr:nth-child(1){
+    /* header row */
+    background-image: linear-gradient(rgb(0, 127, 255), rgb(0, 1, 192));
+}
+/* #tbody.Images tr:nth-child(even){
+    cursor: default;
+    background: rgb(173, 211, 248);
+    
+}*/
+#tables th:nth-child(1){
+    /* Team number title*/
+    width: 10px;
+}
+#tables th:nth-child(2){
+    /* Division Title */
+    width: 10px;
+}
+#tables th:nth-child(3){
+    /* Scored Images Title*/
+    width: 2em;
+}
+#tables th:nth-child(4){
+    /* Elapsed Time Title*/
+    width: 8em;
+}
+#tables th:nth-child(5){
+    /* Total Score Title */
+    width: 3em;
+}
+#tables th:nth-child(6){
+    /* Warning Title */
+    width: 4em;
+}
+
+#tables td:nth-child(1) {
+    /* Team ID column */
+    width: 7em; 
+    /*font-family: monospace;*/
+    font-size: 13px;
+    
+}
+#tables td:nth-child(2) {
+    /* Division info*/
+    /*width: 1em; */
+    font-size: 13px;
+}
+#tables td:nth-child(3) {
+    /* Scored Images info column */
+   /* width: 2em; */
+    font-size: 13px;
+}
+#tables td:nth-child(4) {
+    /* Play Time info column */
+   /* width: 2em; */
+    font-size: 13px;
+    width: 30px;
+}
+#tables td:nth-child(5){
+    /* Total Score info*/
+    font-size: 13px;
+}
+#tables td:nth-child(6){
+    /* Warnings info*/
+    font-size: 13px;
+}
+#Images_Information{
+    width: 75%;
+}
+
+
+#Scoreboard{
+    height: 300px;
+    width: 65%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#tables tr:nth-child(even) {
+    background-color: rgb(173, 211, 248);
+}
+
+
+#credits {
+    background-color: rgb(0, 0, 255);
+    color: white;
+    width: 100%;
+    height: 2.5em;
+    position: fixed;
+    bottom: 0;
+}
+
+#credits * {
+    padding: 2.5px;
+    margin-top: 0;
+    
+}

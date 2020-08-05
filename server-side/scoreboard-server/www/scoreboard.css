@@ -1,0 +1,138 @@
+body {
+    background: url("background.jpg");
+    background-attachment: fixed;
+    background-size: cover;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    padding: 0;
+    margin: 0;
+}
+
+#page {
+    width: 75%;
+    margin: auto;
+}
+
+#menu {
+    backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0.3);
+    overflow: auto;
+}
+
+#logo {
+    width: 100%-20px;
+    padding: 10px;
+}
+
+#hotbar {
+    width: 100%;
+}
+
+.filterButton {
+    width: 130px;
+    height: 30px;
+    margin-left: 10px;
+    float: left;
+    white-space: nowrap;
+    text-align: center;
+    cursor: pointer;
+}
+
+.filterButton a {
+    vertical-align: middle;
+    line-height: 30px;
+    color: white;
+    font-weight: 300;
+}
+
+.filterButton:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+.dropdown {
+    width: 9em;
+    padding-top: 0%;
+    padding-bottom: 0%;
+    padding-right: 30px;
+    float: left;
+}
+
+#listing {
+    margin-top: 50px;
+    margin-bottom: 80px;
+}
+
+#listing table, th, td {
+    border: 3px solid black;
+    border-collapse: collapse;
+}
+
+#listing table {
+    width: 100%;
+}
+
+#listing tr:nth-child(odd) {
+    background-color: rgb(86, 170, 255);
+}
+
+#listing tr:nth-child(even) {
+    background-color: rgb(173, 211, 250);
+}
+
+#listing tr:nth-child(1) {
+    /* header row */
+    cursor: default;
+    background-image: linear-gradient(rgb(0, 127, 255), rgb(0, 1, 192));
+}
+
+#listing th {
+    padding: 10px;
+    color: white;
+}
+
+#listing td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#listing tr:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+}
+
+#listing td:nth-child(1) {
+    /* Team ID */
+    width: 9em;
+    font-family: monospace;
+    font-size: x-large;
+    text-align: center;
+}
+
+#listing td:nth-child(4) {
+    /* Penalty column */
+    width: 3em;
+}
+
+#listing td:nth-child(5) {
+    /* Play time column */
+    width: 7em;
+}
+
+#listing td:nth-child(6) {
+    /* Score column */
+    width: 3em;
+}
+
+#credits {
+    background-color: rgb(0, 0, 255);
+    color: white;
+    width: 100%;
+    height: 3em;
+    position: fixed;
+    bottom: 0;
+}
+
+#credits * {
+    padding: 1em;
+    margin-top: 0;
+}
+
