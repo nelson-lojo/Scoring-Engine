@@ -1,70 +1,12 @@
-body{
-    background: url("background.jpg");
-    background-attachment: fixed;
-    background-size: cover; 
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    padding: 0;
-    margin: 0; 
-}
-
-#page {
-    width: min(60%, 800px);
-    margin: auto;
-}
-
-#menu {
-    backdrop-filter: blur(10px);
-    background-color: rgba(0, 0, 0, 0.3);
-    overflow: auto;
-}
-
-#logo {
-    width: 100%-20px;
-    padding: 10px;
-}
-
-#hotbar {
-    width: 100%;
-}
-
-.filterButton {
-    width: 130px;
-    height: 30px;
-    margin-left: 10px;
-    float: left;
-    white-space: nowrap;
-    text-align: center;
-    cursor: pointer;
-}
-
-.filterButton a {
-    vertical-align: middle;
-    line-height: 30px;
-    color: white;
-    font-weight: 300;
-}
-
-.filterButton:hover {
-    background-color: rgba(255, 255, 255, 0.25);
-}
-
-.dropdown {
-    width: 9em;
-    padding-top: 0%;
-    padding-bottom: 0%;
-    padding-right: 30px;
-    float: left;
-}
-
 #content{
     background: white;
-    height: 100%;
     width: 100%;
     /* border-radius: 10px; */
     background-repeat: repeat-y;
     margin-left: auto;
     margin-right: auto;
     margin-top: 15px;
+    padding-bottom: 0%;
     margin-bottom: 80px;
 }
 
@@ -191,12 +133,12 @@ p.description{
     width: 75%;
 }
 
-
-#Scoreboard{
-    height: 300px;
-    width: 65%;
+#score_graph {
+    height: 500px;
+    width: 85%;
     margin-left: auto;
     margin-right: auto;
+    padding-bottom: 40px;
 }
 
 #tables tr:nth-child(even) {

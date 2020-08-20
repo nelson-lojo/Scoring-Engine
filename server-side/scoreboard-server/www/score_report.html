@@ -2,9 +2,10 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="Team_scoring_report.css">
-        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-        <script src="Team_scoring_report.js" type="text/javascript"></script> 
+        <link rel="stylesheet" href="base.css">
+        <link rel="stylesheet" href="score_report.css">
+        <script src="canvasjs.min.js"></script>
+        <script src="score_report.js" type="text/javascript"></script> 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>11-1828 Scoring Report</title>
         <link rel="icon" href="polycp.ico">
@@ -58,12 +59,12 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>11-1828</td>
-                                <td>Platinum_hs</td>
-                                <td>2</td>
-                                <td>5:54</td>
-                                <td>174</td>
-                                <td>M</td>
+                                <td>{{% id %}}</td>
+                                <td>{{% division %}}</td>
+                                <td>{{% image_count %}}</td>
+                                <td>{{% play_time %}}</td>
+                                <td>{{% total_score %}}</td>
+                                <td>{{% warnings %}}</td>
                             <tr>
                         </tbody>
                     </table>
@@ -81,28 +82,20 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <!-- {{% for image in images: %}} -->
                             <tr>
-                                <td>Ubuntu14</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>1</td>
-                                <td>90</td>
-                                <td>M</td>
-                            </tr>
-                            <tr>
-                                <td>Windows10</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>0</td>
-                                <td>84</td>
-                                <td></td>
+                                <td>{{% image.name %}}</td>
+                                <td>{{% image.time %}}</td>
+                                <td>{{% image.vulns_found %}}</td>
+                                <td>{{% image.vulns_total - image.vulns_found %}}</td>
+                                <td>{{% image.penalties %}}</td>
+                                <td>{{% image.score %}}</td>
+                                <td>{{% image.warnings %}}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <div id="Scoreboard"> </div>
+                <div id="score_graph"> </div>
             </div>
         </div>
         <div id="credits">
