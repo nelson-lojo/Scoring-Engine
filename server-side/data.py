@@ -38,8 +38,8 @@ divisions = {
     #           implemented in getDivision())
     # 'image OS #' should have no spaces 
     #       this should also be the value in startingInfo['os'] on an image
-    'Division 1 ID' : (numOfTeams, 'image OS 1', 'image OS 2'),
-    'Division 2 ID' : (numOfTeams, 'image OS 1', 'image OS 2', 'image OS 3')
+    'Division 1 ID' : 0,#(numOfTeams, 'image OS 1', 'image OS 2'),
+    'Division 2 ID' : 0,#(numOfTeams, 'image OS 1', 'image OS 2', 'image OS 3')
 }
 
 def getDivision(teamID):

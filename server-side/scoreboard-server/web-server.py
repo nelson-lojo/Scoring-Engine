@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from data import info, web, dbInfo
 import pymongo, json
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 db = pymongo.MongoClient(dbInfo['ip'], dbInfo['port'])[dbInfo['name']]
@@ -18,7 +19,7 @@ def serveCompetitionsAndDivisions():
     return json.dumps( list( db.competitions.find() ) )
 
 
-@app.post('/teams')
+@app.route('/teams', methods=['POST'])
 def postTeams(loaded=0):
     comp = request.query.competition
     div = request.query.division
@@ -50,7 +51,8 @@ def postTeams(loaded=0):
 
 @app.route('/team/<teamid>') #*
 def serveTeamSummary(teamid):
-    db.teams.find( { '_id' : pymongo.ObjectID(teamid) } )
+    team = db.teams.find( { '_id' : ObjectId(teamid) } )[0]
+    return render_template('score_report.html', id=str(team._id)[-4:], division=team.division, images=team.images, play_time=(team.endTime - team.startTime), total_score=team.score, warnings= )
 
 if __name__ == "__main__":
     app.run(host=web['ip'], port=web['port'], reloader=True) 

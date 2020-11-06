@@ -6,7 +6,7 @@ window.addEventListener('load', (event) => {
         animationEnabled: true,
         theme: "cyan2",
         title:{
-            text: "11-1828 Image Scores",
+            text: "Image scores",
             verticalAlign: "top",
             horizontalAlign: "left",
             fontFamily: "calibri",
