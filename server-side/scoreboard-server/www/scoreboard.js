@@ -105,32 +105,47 @@ window.addEventListener('scroll', (event) => {
     if (scoreboard) {
         // check if they've reached the bottom and load more teams
         if ( (window.scrollY + window.innerHeight) >= document.body.offsetHeight ) {
-            scoreboard.innerHTML+= loadTeams(FETCH_INCREMENT);
+            loadTeams(FETCH_INCREMENT);
         }
     }
 });
 
 function loadTeams(amount) {
     var fetch = new XMLHttpRequest();
-    fetch.open('POST', window.location.href + '/teams?competition=' + competition + '&division=' + division, false); 
+    fetch.open('POST', window.location.href + '/teams?competition=' + competition + '&division=' + division, true); 
     fetch.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    fetch.onload = () => {
-        if(this.status == 200) {
+    fetch.onload = (e) => {
+        if(fetch.status == 200) {
             content = JSON.parse(fetch.responseText);
+            console.log(content);
             table = '';
             // build table with teams
             for (team of content) {
-                playtime = team.endTime - team.startTime;  // make sure these are date objects #* 
-                table += '<tr>' +
-                    '<td>' + team.num + '</td>' +
-                    '<td>' + team.competition + '</td>' +
-                    '<td>' + team.division + '</td>' +
-                    '<td>' + playtime.getHours() + ':' + playtime.getMinutes() + '</td>' +
-                    '<td>' + team.score + '</td>' +
-                    '<td>' + team.warnings + '</td>' +
+                team.startTime = new Date( Date.parse(team.startTime) );
+                if (!team.hasOwnProperty('endTime')) {
+                    team.endTime = new Date();
+                } 
+                console.log(team.startTime)
+                console.log(typeof(team.startTime))
+                console.log(team.endTime)
+                console.log(typeof(team.endTime))
+                playtime = team.endTime.getTime() - team.startTime.getTime();  // make sure these are date objects #* 
+                console.log(playtime)
+                console.log(typeof(playtime))
+                row = '<tr>' +
+                        '<td>' + team.uid + '</td>' +
+                        '<td>' + team.competition + '</td>' +
+                        '<td>' + team.division + '</td>' +
+                        '<td>' + Math.floor(playtime / (1000 * 3600)) + ':' + Math.floor(playtime / (1000 * 60) % 60) + '</td>' +
+                        '<td>' + team.score + '</td>' +
+                        //'<td>' + team.warnings + '</td>' +
                     '</tr>';
+                console.log(["Loaded team:", team]);
+                table += row
             }
-            return table;
+            console.log(table)
+            var scoreboard = document.getElementsByTagName('table')[0];
+            scoreboard.innerHTML += table;
         }
     };
 
@@ -143,5 +158,5 @@ function refreshTeams(initCount) {
     var scoreboard = document.getElementsByTagName('table')[0];
     scoreboard.innerHTML = scoreboardHeader;
     fetchedTeams = 0;
-    scoreboard.innerHTML += loadTeams(initCount);
+    loadTeams(initCount);
 }

@@ -84,13 +84,13 @@
                         <tbody>
                             <!-- {{% for image in images: %}} -->
                             <tr>
-                                <td>{{ image.name }}</td>
-                                <td>{{ image.endTime - image.startTime }}</td>
-                                <td>{{ image.vulns_found }}</td>
-                                <td>{{ image.vulns_total - image.vulns_found }}</td>
-                                <td>{{ image.penalties }}</td>
-                                <td>{{ image.score }}</td>
-                                <td>{{ image.warnings }}</td>
+                                <td>{/{ image.name }}</td>
+                                <td>{/{ image.endTime - image.startTime }}</td>
+                                <td>{/{ image.vulns_found }}</td>
+                                <td>{/{ image.vulns_total - image.vulns_found }}</td>
+                                <td>{/{ image.penalties }}</td>
+                                <td>{/{ image.score }}</td>
+                                <td>{/{ image.warnings }}</td>
                             <!-- {{% endfor %}} -->
                             </tr>
                         </tbody>
