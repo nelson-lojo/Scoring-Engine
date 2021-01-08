@@ -5,7 +5,7 @@
         <link rel="stylesheet" href="scoreboard.css">
         <link rel="icon" href="polycp.ico">
         <script src="scoreboard.js" type="text/javascript"></script>
-        <title>{Organization} Scoreboard </title>
+        <title>{{Organization}} Scoreboard </title>
     </head>
     <body>
         <div id="page"> 
@@ -28,9 +28,9 @@
                 <div id="compDropdown" class="dropdown">
                     <input type="text" list="compSearch" placeholder="Search" size=16>
                     <datalist id="compSearch">
-                        <!--{% for comp in competitions %}
+                        {% for comp in competitions %}
                         <option value="{{comp}}">
-                        {% endfor %}-->
+                        {% endfor %}
                         <option value="comp 2">
                         <option value="comp 1">
                     </datalist>                        
@@ -38,9 +38,11 @@
                 <div id="divDropdown" class="dropdown">
                     <input type="text" list="divSearch" placeholder="Choose a valid Competition" size=16>
                     <datalist id="divSearch">
-                        <!--{% for div in divisions %}
+                        {% for comp, divs in divisions.items() %}
+                            {% for div in divs %}
                         <option value="{{div}}">
-                        {% endfor %}-->
+                            {% endfor %}
+                        {% endfor %}
                     </datalist>                        
                 </div>
             </div>

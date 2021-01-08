@@ -1,3 +1,50 @@
+//parsing the external json file here
+function loadTeams(amount) {
+    var fetch = new XMLHttpRequest();
+    fetch.open('POST', window.location.href + '/teams?competition=' + competition + '&division=' + division, true); 
+    fetch.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    fetch.onload = (e) => {
+        if(fetch.status == 200) {
+            content = JSON.parse(fetch.responseText);
+            table = document.getElementsByTagName('tbody.')[0];
+            // build table with teams
+            for (team of content) {
+                team.startTime = new Date( Date.parse(team.startTime) );
+                if (!team.hasOwnProperty('endTime')) {
+                    team.endTime = new Date();
+                } 
+                playtime = team.endTime.getTime() - team.startTime.getTime();  // make sure these are date objects #* 
+                row = document.createElement("TR")
+                row.addEventListener('click', (event) => {
+                    window.location="team/" + team._id
+                }) 
+                uid = document.createElement("TD");
+                uid.innerHTML = team.uid;
+
+                comp = document.createElement("TD");
+                comp.innerHTML = team.competition;
+
+                div = document.createElement("TD");
+                div.innerHTML = team.division;
+
+                playtyme = document.createElement("TD");
+                playtyme.innerHTML =  Math.floor(playtime / (1000 * 3600)) + ':' + Math.floor(playtime / (1000 * 60) % 60);
+                
+                score = document.createElement("TD");
+                score.innerHTML = team.score
+                
+                row.appendChild(uid);
+                row.appendChild(comp);
+                row.appendChild(div);
+                row.appendChild(playtyme);
+                row.appendChild(score);
+                
+                console.log(["Loaded team:", team]);
+                table.appendChild(row)
+            }
+        }
+    };
+
 window.addEventListener('load', (event) => {
 
     const newLocal = 750;

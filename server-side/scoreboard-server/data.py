@@ -1,4 +1,5 @@
 info = {
+    'organizerName' : 'cALi pAtrIot',
     'competitionName' : 'Practice Round',
     'divIDLen' : 2  # must be stricly < 8
                     # the shorter it is, 

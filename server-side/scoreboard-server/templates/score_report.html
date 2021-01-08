@@ -2,19 +2,21 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="base.css">
-        <link rel="stylesheet" href="score_report.css">
-        <script src="canvasjs.min.js"></script>
-        <script src="score_report.js" type="text/javascript"></script> 
+        <link rel="stylesheet" href="/base.css">
+        <link rel="stylesheet" href="/score_report.css">
+        <script src="/canvasjs.min.js"></script>
+        <!--External Json file below-->
+        <script type="text/javascript" src="data.json"></script>
+        <script src="/score_report.js" type="text/javascript"></script> 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title> Team {{ id }} Scoring Report</title>
-        <link rel="icon" href="polycp.ico">
+        <link rel="icon" href="/polycp.ico">
     </head>
     <body>
         <div id="page">
             <div id="menu"> 
                 <div id="logo"> 
-                    <img src="logoLong.png" alt="Competition Host Logo">
+                    <img src="/logoLong.png" alt="Competition Host Logo">
                 </div>
                 <div id="hotbar">
                     <div class="filterButton" id="compButton">
@@ -61,7 +63,7 @@
                             <tr>
                                 <td>{{ id }}</td>
                                 <td>{{ division }}</td>
-                                <td>{{ len(images) }}</td>
+                                <td>{{ im_no }}</td>
                                 <td>{{ play_time }}</td>
                                 <td>{{ total_score }}</td>
                                 <td>{{ warnings }}</td>
@@ -82,17 +84,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- {{% for image in images: %}} -->
+                            {% for image in images: %}
                             <tr>
-                                <td>{/{ image.name }}</td>
-                                <td>{/{ image.endTime - image.startTime }}</td>
-                                <td>{/{ image.vulns_found }}</td>
-                                <td>{/{ image.vulns_total - image.vulns_found }}</td>
-                                <td>{/{ image.penalties }}</td>
-                                <td>{/{ image.score }}</td>
-                                <td>{/{ image.warnings }}</td>
-                            <!-- {{% endfor %}} -->
+                                <td>{{ image.name }}</td>
+                                <td>{{ image.endTime - image.startTime }}</td>
+                                <td>{{ image.vulns_found }}</td>
+                                <td>{{ image.vulns_total - image.vulns_found }}</td>
+                                <td>{{ image.penalties }}</td>
+                                <td>{{ image.score }}</td>
+                                <td>{{ image.warnings }}</td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>

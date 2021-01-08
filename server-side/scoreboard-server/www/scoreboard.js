@@ -60,6 +60,11 @@ window.addEventListener('load', (event) => {
         divDropdown.style.display = 'none';
     }
 
+    // make a tbody to add teams to
+    var board = document.getElementsByTagName('table')[0];
+    var list = document.createElement('TBODY');
+    board.appendChild(list)
+    
     // load `increment` teams to the list when the page loads #*
     refreshTeams(FETCH_INCREMENT);
 
@@ -117,35 +122,42 @@ function loadTeams(amount) {
     fetch.onload = (e) => {
         if(fetch.status == 200) {
             content = JSON.parse(fetch.responseText);
-            console.log(content);
-            table = '';
+            table = document.getElementsByTagName('tbody')[0];
             // build table with teams
             for (team of content) {
                 team.startTime = new Date( Date.parse(team.startTime) );
                 if (!team.hasOwnProperty('endTime')) {
                     team.endTime = new Date();
                 } 
-                console.log(team.startTime)
-                console.log(typeof(team.startTime))
-                console.log(team.endTime)
-                console.log(typeof(team.endTime))
                 playtime = team.endTime.getTime() - team.startTime.getTime();  // make sure these are date objects #* 
-                console.log(playtime)
-                console.log(typeof(playtime))
-                row = '<tr>' +
-                        '<td>' + team.uid + '</td>' +
-                        '<td>' + team.competition + '</td>' +
-                        '<td>' + team.division + '</td>' +
-                        '<td>' + Math.floor(playtime / (1000 * 3600)) + ':' + Math.floor(playtime / (1000 * 60) % 60) + '</td>' +
-                        '<td>' + team.score + '</td>' +
-                        //'<td>' + team.warnings + '</td>' +
-                    '</tr>';
+                row = document.createElement("TR")
+                row.addEventListener('click', (event) => {
+                    window.location="team/" + team._id
+                }) 
+                uid = document.createElement("TD");
+                uid.innerHTML = team.uid;
+
+                comp = document.createElement("TD");
+                comp.innerHTML = team.competition;
+
+                div = document.createElement("TD");
+                div.innerHTML = team.division;
+
+                playtyme = document.createElement("TD");
+                playtyme.innerHTML =  Math.floor(playtime / (1000 * 3600)) + ':' + Math.floor(playtime / (1000 * 60) % 60);
+                
+                score = document.createElement("TD");
+                score.innerHTML = team.score
+                
+                row.appendChild(uid);
+                row.appendChild(comp);
+                row.appendChild(div);
+                row.appendChild(playtyme);
+                row.appendChild(score);
+                
                 console.log(["Loaded team:", team]);
-                table += row
+                table.appendChild(row)
             }
-            console.log(table)
-            var scoreboard = document.getElementsByTagName('table')[0];
-            scoreboard.innerHTML += table;
         }
     };
 
@@ -155,8 +167,8 @@ function loadTeams(amount) {
 
 // reset the table of teams and load a new set of `initCount` teams
 function refreshTeams(initCount) {
-    var scoreboard = document.getElementsByTagName('table')[0];
-    scoreboard.innerHTML = scoreboardHeader;
+    var scoreboard = document.getElementsByTagName('tbody')[0];
+    scoreboard.innerHTML = '';
     fetchedTeams = 0;
     loadTeams(initCount);
 }

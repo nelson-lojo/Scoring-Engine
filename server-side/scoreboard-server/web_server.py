@@ -10,9 +10,14 @@ db = pymongo.MongoClient(dbInfo['ip'], dbInfo['port'])[dbInfo['name']]
 
 @app.route('/')
 def serveScoreboard():
-    comps = []
-    divs = []
-    return render_template('scoreboard.html', competitions=comps, divisions=divs)
+    comps, divs = [], {}
+    query = list(db.competitions.find())
+    for comp in query:
+        comps.append(
+            comp['name']
+        )
+        divs[comp['name']] = [ div['name'] for div in comp['divisions'] ]
+    return render_template('scoreboard.html', Organization=info['organizerName'], competitions=comps, divisions=divs)
 #    return static_file("scoreboard.html", root=f"{web['root']}/www") 
 
 @app.route('/comps')
@@ -49,7 +54,7 @@ def postTeams(loaded=0):
                     'division' : {'$regex': '.*'}, #div,
                     'competition' : {'$regex': '.*'}#comp
                 }, {
-                    '_id' : 0,
+                    '_id' : 1,
                     'uid' : 1,
                     'competition' : 1,
                     'division' : 1,
@@ -63,13 +68,34 @@ def postTeams(loaded=0):
             .skip(int(loaded))
             .limit(int(increment))
         ),
-        default=(lambda obj: obj.isoformat() if isinstance(obj, (datetime, date)) else None)
+        default=(
+            lambda obj: (
+                obj.isoformat() if isinstance(obj, (datetime, date)) else (
+                    str(obj) if isinstance(obj, ObjectId) else None
+                )
+            )
+        )
     )
 
 @app.route('/team/<teamid>') #*
 def serveTeamSummary(teamid):
-    team = db.teams.find( { '_id' : ObjectId(teamid) } )[0]
-    return render_template('score_report.html', id=str(team._id)[-4:], division=team.division, images=team.images, play_time=(team.endTime - team.startTime), total_score=team.score, warnings='' )
+    team = list(db.teams.find( { '_id' : ObjectId(teamid) } ))[0]
+    team['endTime'] = team.get('endTime', datetime.now())
+    for i in range(len(team['images'])):
+        image = team['images'][i]
+        image['']
+
+
+    return render_template(
+        'score_report.html', 
+        id=str(team['_id'])[-4:], 
+        division=team['division'], 
+        im_no=len(team['images']),
+        images=team['images'], 
+        play_time=(team['endTime'] - team['startTime']), 
+        total_score=team['score'], 
+        warnings='' 
+    )
 
 if __name__ == "__main__":
     app.run(host=web['ip'], port=web['port'], debug=True)#, reloader=True) 

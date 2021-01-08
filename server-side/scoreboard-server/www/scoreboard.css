@@ -20,15 +20,11 @@
     background-color: rgb(173, 211, 250);
 }
 
-#listing tr:nth-child(1) {
-    /* header row */
-    cursor: default;
-    background-image: linear-gradient(rgb(0, 127, 255), rgb(0, 1, 192));
-}
-
 #listing th {
     padding: 10px;
     color: white;
+    cursor: default;
+    background-image: linear-gradient(rgb(0, 127, 255), rgb(0, 1, 192));
 }
 
 #listing td {
