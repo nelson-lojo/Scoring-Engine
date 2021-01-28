@@ -109,7 +109,7 @@ class machine:
         if not os.path.isfile(engineRoot + "image.dat"):
             persistentData = open( (engineRoot + "image.dat"), "w")
             try:
-                persistentData.write(str(datetime.utcnow()))
+                persistentData.write(str(datetime.utcnow().timestamp()))
                 persistentData.write(getTeamID())
             except:
                 log("Could not write image image data to file")

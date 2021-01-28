@@ -54,11 +54,12 @@ def handleImage(connection):
         'teamID' : str(imageInfo[0]),
         'imageID' : str(imageInfo[1]),
         'os' : str(imageInfo[2]),
-        'startTime' : datetime.datetime.strptime( 
-            str(imageInfo[3]) + str(imageInfo[4]) , 
-            '%Y-%m-%d %H:%M:%S.%f' ), # produces datetime.datetime object 
-        'score' : int(imageInfo[5]),
-        'vulnsFound' : int(imageInfo[6]),
+        'startTime' : 
+            datetime.datetime.utcfromtimestamp( 
+                str(imageInfo[3])
+            ), # produces datetime.datetime object 
+        'score' : int(imageInfo[4]),
+        'vulnsFound' : int(imageInfo[5]),
         'timestamp' : datetime.datetime.utcnow()
     }
     print(f"Received packet from image {imageInfo['imageID']}")
@@ -171,5 +172,5 @@ def handleImage(connection):
 while True:
     imageSock, address = listener.accept()
 
-    thread = threading.Thread(target=handleImage, args=(imageSock))
+    thread = threading.Thread(target=handleImage, args=(imageSock,))
     thread.start()
