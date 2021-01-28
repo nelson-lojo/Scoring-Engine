@@ -1,9 +1,8 @@
-from data import info, scoringServer, dbInfo, getDivision, listens
+from data import info, scoringServer, dbInfo, getDivision, listens, divisions
 import socket, pymongo, threading, datetime
+from os import path
 
-alreadyInit = open("alreadyInit", "r")
-if not (alreadyInit.readlines()):
-    alreadyInit.close()
+if not (path.exists("alreadyInit")):
     # there's nothing in the checkfile, so 
     # do init script
     db = pymongo.MongoClient( dbInfo['ip'], dbInfo['port'] ) [dbInfo['name']]
@@ -37,8 +36,8 @@ if not (alreadyInit.readlines()):
         unique=True, name='one_div_per_comp' )
     
     with open("alreadyInit", "w") as checkFile:
-        checkFile.writeline("completed")
-
+        checkFile.writelines("completed")
+    print("MongoDB initiaization completed")
 
 listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -62,6 +61,7 @@ def handleImage(connection):
         'vulnsFound' : int(imageInfo[6]),
         'timestamp' : datetime.datetime.utcnow()
     }
+    print(f"Received packet from image {imageInfo['imageID']}")
 
     # create a new client for each image connection
     conn = pymongo.MongoClient( dbInfo['ip'], dbInfo['port'] )
