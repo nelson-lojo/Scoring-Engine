@@ -56,7 +56,7 @@ def handleImage(connection):
         'os' : str(imageInfo[2]),
         'startTime' : 
             datetime.datetime.utcfromtimestamp( 
-                str(imageInfo[3])
+                float(imageInfo[3])
             ), # produces datetime.datetime object 
         'score' : int(imageInfo[4]),
         'vulnsFound' : int(imageInfo[5]),
