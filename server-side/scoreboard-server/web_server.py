@@ -135,6 +135,11 @@ def serveScoreInfo(teamid):
             )
         )
     )
+    
+# testing route
+@app.route('/bruh')
+def bruh():
+    return render_template('index.html')
 
 if __name__ == "__main__":
     app.run(host=web['ip'], port=web['port'], debug=True)#, reloader=True) 
