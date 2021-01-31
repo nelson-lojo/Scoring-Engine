@@ -2,22 +2,20 @@ console.log("PhatBoi was here");
 var parentDiv = document.getElementById("score_graph");
 var cFrame = document.createElement('canvas');
 cFrame.setAttribute("id", "scoreboard");
-cFrame.setAttribute("width", parentDiv.clientWidth);
+cFrame.setAttribute("width", parentDiv.clientWidth * 0.99);
 cFrame.setAttribute("height", parentDiv.clientHeight);
-//cFrame.style.width = parentDiv.clientWidth;
-//cFrame.style.height = parentDiv.clientHeight;
 cFrame.style.border = "none";
 parentDiv.appendChild(cFrame);
 var canvas = cFrame.getContext("2d");
-var widthOffset = 40.0;
-var heightOffset = 40.0;
+var widthOffset = 0.0;
+var heightOffset = 0.0;
 var canvasWidth = cFrame.width;//parentDiv.clientWidth;
 var canvasHeight = cFrame.height;//parentDiv.clientHeight;
 var width = canvasWidth - widthOffset;
 var height = canvasHeight - heightOffset;
 
-var graphX = 20.0;
-var graphY = 20.0;
+var graphX = 0.0;
+var graphY = 0.0;
 
 function update(){
 
