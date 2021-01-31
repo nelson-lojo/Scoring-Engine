@@ -53,9 +53,7 @@ def handleImage(connection, connInfo):
             'startTime' : { '$exists' : False }
         }, { 
             '$set' : {
-                'uid' : imageInfo['teamID'],
                 'num' : imageInfo['teamID'][:4],
-                'competition' : info['competitionName'],
                 'division' : getDivision(imageInfo['teamID']),
                 'startTime' : imageInfo['startTime'],
                 'endTime' : imageInfo['timestamp'],
