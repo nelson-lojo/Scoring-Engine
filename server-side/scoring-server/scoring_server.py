@@ -49,30 +49,18 @@ def handleImage(connection, connInfo):
     db.teams.update_one(
         { 
             'uid' : imageInfo['teamID'], 
-            'competition' : info['competitionName'],
-            'startTime' : { '$exists' : False }
+            'competition' : info['competitionName']
         }, { 
             '$set' : {
                 'uid' : imageInfo['teamID'],
                 'competition' : info['competitionName'],
-                'startTime' : imageInfo['startTime'],
-            }
-        },
-        upsert=True
-    )
-
-    db.teams.update_one(
-        {
-            'uid' : imageInfo['teamID'],  
-            'competition' : info['competitionName'],
-        } , {
-            '$set' : {
                 'num' : imageInfo['teamID'][:4],
                 'division' : getDivision(imageInfo['teamID']),
                 'endTime' : imageInfo['timestamp'],
                 'score' : 0
             }
-        }
+        }, 
+        upsert=True
     )
 
     # update team start and end time
