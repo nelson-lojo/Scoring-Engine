@@ -61,8 +61,9 @@ def handleImage(connection):
                 'endTime' : imageInfo['timestamp'],
                 'score' : 0
             }
-        }
-    )   
+        },
+        upsert=True
+    )
 
     # update team start and end time
     db.teams.update_one(
