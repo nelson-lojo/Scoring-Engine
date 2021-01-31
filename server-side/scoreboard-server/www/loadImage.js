@@ -9,8 +9,10 @@ parentDiv.appendChild(cFrame);
 var canvas = cFrame.getContext("2d");
 var widthOffset = 40.0;
 var heightOffset = 40.0;
-var width = cFrame.width - widthOffset;
-var height = cFrame.height - heightOffset;
+var canvasWidth = parentDiv.clientWidth;
+var canvasHeight = parentDiv.clientHeight;
+var width = canvasWidth - widthOffset;
+var height = canvasHeight - heightOffset;
 
 var graphX = 20.0;
 var graphY = 20.0;
@@ -24,7 +26,7 @@ function update(){
         if (this.status == 200) {
             entry = JSON.parse(this.responseText);
             var images = entry.images;
-            canvas.clearRect(0, 0, cFrame.width, cFrame.height);
+            canvas.clearRect(0, 0, canvasWidth, canvasHeight);
             canvas.lineWidth = 1;
             
             //Graph Section
