@@ -22,7 +22,7 @@ def dbConnect(connInfo):
         )
     return conn
 
-def handleImage(connection):
+def handleImage(connection, connInfo):
     imageInfo = connection.recv(512).decode("utf-8")
     connection.close()
 
@@ -42,8 +42,8 @@ def handleImage(connection):
     print(f"Received packet from image {imageInfo['imageID']}")
 
     # create a new client for each image connection
-    conn = dbConnect(dbInfo)
-    db = conn[dbInfo['name']]
+    conn = dbConnect(connInfo)
+    db = conn[connInfo['name']]
 
     # add team if not already registered
     db.teams.update_one(
@@ -199,5 +199,5 @@ if __name__ == '__main__':
         imageSock, address = listener.accept()
         print(f"Connection established with {address}")
 
-        thread = threading.Thread(target=handleImage, args=(imageSock,))
+        thread = threading.Thread(target=handleImage, args=(imageSock, dbInfo,))
         thread.start()
