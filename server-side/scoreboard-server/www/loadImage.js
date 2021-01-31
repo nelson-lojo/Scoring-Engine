@@ -1,10 +1,12 @@
 console.log("PhatBoi was here");
 var cFrame = document.createElement('canvas');
 cFrame.setAttribute("id", "scoreboard");
+cFrame.style.width = "100%";
+cFrame.style.height = "100%";
+cFrame.style.border = "none";
 document.getElementById("score_graph").appendChild(cFrame)
 //var cFrame = document.getElementById("scoreboard");
 var canvas = cFrame.getContext("2d");
-cFrame.style.border = "none";
 var widthOffset = 40.0;
 var heightOffset = 40.0;
 var width = cFrame.width - widthOffset;
