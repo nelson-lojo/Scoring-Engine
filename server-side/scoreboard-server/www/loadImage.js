@@ -19,20 +19,20 @@ function update(){
             entry = JSON.parse(this.responseText);
             var images = entry.images;
             canvas.clearRect(0, 0, width, height);
-            canvas.lineWidth = 5;
+            canvas.lineWidth = 1;
             
             //Graph Section
             
             var maxScore = 0;
             for(var i = 0; i < images.length; i++){
-                for(var j = 0; j < images[i].length; j++){
+                for(var j = 0; j < images[i].scores.length; j++){
                     if (images[i].scores[j].score > maxScore){
                         maxScore = images[i].scores[j].score;
                     }
                 }
             }
             maxScore = Math.max(40, Math.ceil(maxScore / 10) * 10);
-            canvas.strokeStyle = "#000000";
+            canvas.strokeStyle = "#b5b5b5";
             for(var i = 0; i <= maxScore / 10; i++){
                 canvas.beginPath();
                 var drawHeight = height - (10 * height / maxScore) * i;
@@ -40,6 +40,7 @@ function update(){
                 canvas.lineTo(width + graphY, drawHeight + graphY);
                 canvas.stroke();
             }
+            canvas.lineWidth = 3;
             for(var i = 0; i < images.length; i++){
                 if (i % 3 == 0)
                     canvas.strokeStyle = "#FF0000";
