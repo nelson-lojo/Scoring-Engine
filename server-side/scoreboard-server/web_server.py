@@ -1,13 +1,30 @@
 from flask import Flask, render_template, send_from_directory, request
-from data import info, web, dbInfo
 from datetime import date, datetime
-import pymongo, json
+from data import info, web, dbInfo
 from bson.objectid import ObjectId
+from getpass import getpass
+import pymongo, json
 
 app = Flask(__name__)
-db = pymongo.MongoClient(dbInfo['ip'], dbInfo['port'])[dbInfo['name']]
 
+if dbInfo['user']:
+    db = pymongo.MongoClient(
+        dbInfo['ip'],
+        dbInfo['port'],
+        username=dbInfo['user'],
+        password=(
+            dbInfo['passwd'] or 
+              getpass('Enter the password for your db: ')
+            ),
+        authsource=dbInfo['authdb']
+    ) [dbInfo['name']]
+else:
+    db = pymongo.MongoClient( 
+        dbInfo['ip'], 
+        dbInfo['port'],
+    )[dbInfo['name']]
 
+# serve the scoreboard
 @app.route('/')
 def serveScoreboard():
     comps, divs = [], {}
@@ -18,8 +35,15 @@ def serveScoreboard():
         )
         divs[comp['name']] = [ div['name'] for div in comp['divisions'] ]
     return render_template('scoreboard.html', Organization=info['organizerName'], competitions=comps, divisions=divs)
-#    return static_file("scoreboard.html", root=f"{web['root']}/www") 
 
+# default route for non-html resources
+@app.route('/<resource>')
+def serveResource(resource):
+    return send_from_directory('www', resource)#f"www/{resource}")
+
+
+
+# get the competitions and their divisions as json
 @app.route('/comps')
 def serveCompetitionsAndDivisions():
     return json.dumps( 
@@ -35,10 +59,7 @@ def serveCompetitionsAndDivisions():
         ) 
     )
 
-@app.route('/<resource>')
-def serveResource(resource):
-    return send_from_directory('www', resource)#f"www/{resource}")
-
+# get all the teams in a competition and division as json
 @app.route('/teams', methods=['POST'])
 def postTeams(loaded=0):
     comp = request.args.get('competition') or {'$regex': '.*'}
@@ -77,15 +98,19 @@ def postTeams(loaded=0):
         )
     )
 
+# serve team score summary
 @app.route('/team/<teamid>') #*
 def serveTeamSummary(teamid):
+    # return str(team)
     team = list(db.teams.find( { '_id' : ObjectId(teamid) } ))[0]
+    # return str(team)
     team['endTime'] = team.get('endTime', datetime.now())
-    for i in range(len(team['images'])):
-        image = team['images'][i]
-        image['']
-
-
+    # for i in range(len(team['images'])):
+    #     image = team['images'][i]
+    #     image['']
+    # return f"eyy: {teamid}"
+    # return str(team)
+    # assert False
     return render_template(
         'score_report.html', 
         id=str(team['_id'])[-4:], 
@@ -95,6 +120,20 @@ def serveTeamSummary(teamid):
         play_time=(team['endTime'] - team['startTime']), 
         total_score=team['score'], 
         warnings='' 
+    )
+
+# get the score information as json
+@app.route('/info/<teamid>')
+def serveScoreInfo(teamid):
+    return json.dumps( 
+        list( db.teams.find( { '_id' : ObjectId(teamid) } ) )[0],
+        default=(
+            lambda obj: (
+                obj.isoformat() if isinstance(obj, (datetime, date)) else (
+                    str(obj) if isinstance(obj, ObjectId) else None
+                )
+            )
+        )
     )
 
 if __name__ == "__main__":

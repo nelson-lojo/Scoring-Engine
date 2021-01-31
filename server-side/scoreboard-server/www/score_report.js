@@ -1,4 +1,25 @@
 //parsing the external json file here
+function getInfo() {
+    var fetch = new XMLHttpRequest();
+    fetch.open(
+        'GET', 
+        window.location.host 
+        + '/info/' 
+        + window.location.pathname.split('/')[2], // grab the team ObjectID from the current URL
+        true
+    );
+    fetch.setRequestHeader('Content-type', 'text/plain');
+    fetch.onload = (e) => {
+        if (fetch.status == 200) {
+            team = JSON.parse(fetch.responseText);
+            console.log(team)
+            // continue updating the site
+
+        }
+    }
+}
+getInfo()
+
 function loadTeams(amount) {
     var fetch = new XMLHttpRequest();
     fetch.open('POST', window.location.href + '/teams?competition=' + competition + '&division=' + division, true); 
@@ -44,7 +65,8 @@ function loadTeams(amount) {
             }
         }
     };
-
+}
+/*
 window.addEventListener('load', (event) => {
 
     const newLocal = 750;
@@ -122,4 +144,4 @@ window.addEventListener('load', (event) => {
     if (gentime) {
         gentime.innerHTML = (new Date()).toISOString().replace('T', ' ').replace('Z', ' UTC');
     }
-});
+});*/

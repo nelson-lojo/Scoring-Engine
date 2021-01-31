@@ -15,20 +15,21 @@ scoringServer = {
 
 # this should be a publicly accessible interface
 web = {
-    'root' : '/scoreboard',
-    'ip' : '',
-    'port' : 69 #int(0)
+    'root' : './',
+    'ip' : '127.0.0.1',
+    'port' : int(8080)
 }
 
 # this may (or may not) be a publicly accessible IP
 # configure the way your organization desires 
 #   if you don't know, then leave defaults
 dbInfo = {
-    'ip' : '127.0.0.1',
+    'ip' : '3.140.134.99',
     'port' : 27017,
-    'name' : "cptest",
-    'user' : '',
-    'passwd' : ''
+    'name' : 'notCP',
+    'user' : 'nelly',
+    'passwd' : '',
+    'authdb' : 'admin'
 }
 
 

@@ -59,15 +59,15 @@
                                 <th>*Warnings</th> 
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>{{ id }}</td>
-                                <td>{{ division }}</td>
-                                <td>{{ im_no }}</td>
-                                <td>{{ play_time }}</td>
-                                <td>{{ total_score }}</td>
-                                <td>{{ warnings }}</td>
-                            <tr>
+                        <tbody id="teamInfoSummary">
+                            <!-- <tr>
+                                <td>{/{ id }}</td>
+                                <td>{/{ division }}</td>
+                                <td>{/{ im_no }}</td>
+                                <td>{/{ play_time }}</td>
+                                <td>{/{ total_score }}</td>
+                                <td>{/{ warnings }}</td>
+                            <tr> -->
                         </tbody>
                     </table>
                     <br />
@@ -83,18 +83,21 @@
                                 <th>*Warn</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {% for image in images: %}
+                        <tbody id='imageList'>
+                            <!-- {\% for image in images: %}
                             <tr>
-                                <td>{{ image.name }}</td>
-                                <td>{{ image.endTime - image.startTime }}</td>
-                                <td>{{ image.vulns_found }}</td>
-                                <td>{{ image.vulns_total - image.vulns_found }}</td>
-                                <td>{{ image.penalties }}</td>
-                                <td>{{ image.score }}</td>
-                                <td>{{ image.warnings }}</td>
+                                <td>{\{ image['name'] }}</td>
+                                <td>{\{ image['endTime'] - image['startTime'] }}</td>
+                                <td>{\{ image['vulns'] }}</td>
+                                <td></td>
+                                <td>{\{ image['vulns_total'] - image['vulns_found'] }}</td>
+                                <td></td>
+                                <td>{\{ image.penalties }}</td>
+                                <td>{{ image['score'] }}</td>
+                                <td></td>
+                                <td>{\{ image.warnings }}</td>
                             </tr>
-                            {% endfor %}
+                            {\% endfor %} -->
                         </tbody>
                     </table>
                 </div>
