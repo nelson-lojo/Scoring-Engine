@@ -35,7 +35,7 @@ function update(){
             canvas.strokeStyle = "#000000";
             for(var i = 0; i <= maxScore / 10; i++){
                 canvas.beginPath();
-                var drawHeight = height - 10 * i;
+                var drawHeight = height - (10 * height / maxScore) * i;
                 canvas.moveTo(0 + graphX, drawHeight + graphY);
                 canvas.lineTo(width + graphY, drawHeight + graphY);
                 canvas.stroke();
@@ -48,8 +48,8 @@ function update(){
                 else
                     canvas.strokeStyle = "#0000FF";
                 canvas.beginPath();
-                canvas.moveTo(0 + graphX, 0 + graphY);
-                for(var j = 0; j < images[i].length; j++){
+                canvas.moveTo(0 + graphX, height + graphY);
+                for(var j = 0; j < images[i].scores.length; j++){
                     var mapHeight = map(images[i].scores[j].score, 0, maxScore, 0, height);
                     mapHeight = height - mapHeight;
                     canvas.lineTo(width * (j + 1.0) / images[i].scores.length + graphX, mapHeight + graphY);
