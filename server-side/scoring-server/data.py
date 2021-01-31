@@ -8,8 +8,8 @@ info = {
 
 # this should be a publicly accessible interface
 scoringServer = {
-    'ip' : '127.0.0.1',
-    'port' : int(1069)
+    'ip' : '0.0.0.0',
+    'port' : int(8080)
 }
 
 # this should be a publicly accessible interface

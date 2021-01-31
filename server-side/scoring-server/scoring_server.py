@@ -5,7 +5,7 @@ import socket, pymongo, threading, datetime
 
 def dbConnect(connInfo):
     if connInfo['user']:
-        db = pymongo.MongoClient(
+        conn = pymongo.MongoClient(
             connInfo['ip'],
             connInfo['port'],
             username=connInfo['user'],
@@ -14,58 +14,13 @@ def dbConnect(connInfo):
                 getpass('Enter the password for your db: ')
                 ),
             authsource=connInfo['authdb']
-        ) [connInfo['name']]
+        )
     else:
-        db = pymongo.MongoClient( 
+        conn = pymongo.MongoClient( 
             connInfo['ip'], 
             connInfo['port'],
-        ) [connInfo['name']]
-    return db
-    
-db = dbConnect(dbInfo)
-
-if not (path.exists("alreadyInit")):
-    # there's nothing in the checkfile, so 
-    # do init script    
-
-    db.competitions.insert_one({ 
-        'name' : info['competitionName'],
-        'divisions' : [
-            {
-                'name' : div[ : -( 1 + info['divIDLen'] ) ],
-                'teams' : divisions[div][0],
-                'images' : list( divisions[div][1:] )
-            } 
-            for div in divisions
-        ]
-    })
-
-    db.teams.insert_one({
-        'uid' : '000000000000',
-        'num' : '0000',
-        'score' : -1
-    })
-
-    db.teams.create_index( 
-        [('uid', pymongo.DESCENDING), ('competition', pymongo.DESCENDING)], 
-        unique=True, name='one_team_uid_per_comp' )
-    db.teams.create_index(
-        [('num', pymongo.DESCENDING), ('competition', pymongo.DESCENDING)],
-        unique=True, name='one_team_num_per_comp')
-    db.teams.create_index( 
-        [('competition', pymongo.DESCENDING), ('division', pymongo.DESCENDING)], 
-        unique=True, name='one_div_per_comp' )
-    
-    with open("alreadyInit", "w") as checkFile:
-        checkFile.writelines("completed")
-    print("MongoDB initiaization completed")
-
-listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-listener.bind( (scoringServer['ip'], scoringServer['port'] ) )
-
-listener.listen( int( listens * 1.5 ) )
-print('Listener activated')
+        )
+    return conn
 
 def handleImage(connection):
     imageInfo = connection.recv(512).decode("utf-8")
@@ -87,7 +42,8 @@ def handleImage(connection):
     print(f"Received packet from image {imageInfo['imageID']}")
 
     # create a new client for each image connection
-    db = dbConnect(dbinfo)
+    conn = dbConnect(dbInfo)
+    db = conn[dbInfo['name']]
 
     # add team if not already registered
     db.teams.update_one(
@@ -172,26 +128,75 @@ def handleImage(connection):
     )
 
     # update composite score
-    images = list( 
+    team = list( 
         db.teams.find({ 'uid' : imageInfo['teamID'] }, { 'images' : 1 }) 
-        )[0]['images']
-    db.teams.update_one(
-        { 
-            'uid' : imageInfo['teamID'],
-            'competition' : info['competitionName']
-        }, {
-            '$set' : {
-                'score' : sum([img['score'] for img in images])
+        )
+    if team:
+        images = team[0]['images']
+        db.teams.update_one(
+            { 
+                'uid' : imageInfo['teamID'],
+                'competition' : info['competitionName']
+            }, {
+                '$set' : {
+                    'score' : sum([img['score'] for img in images])
+                }
             }
-        }
-    )
+        )
+    else:
+        pass
 
     conn.close()
 
+if __name__ == '__main__':
+    dbInfo['passwd'] = getpass('Enter the password for your db: ')
+    db = dbConnect(dbInfo)[dbInfo['name']]
 
-# main loop
-while True:
-    imageSock, address = listener.accept()
+    if not (path.exists("alreadyInit")):
+        # there's nothing in the checkfile, so 
+        # do init script    
 
-    thread = threading.Thread(target=handleImage, args=(imageSock,))
-    thread.start()
+        db.competitions.insert_one({ 
+            'name' : info['competitionName'],
+            'divisions' : [
+                {
+                    'name' : div[ : -( 1 + info['divIDLen'] ) ],
+                    'teams' : divisions[div][0],
+                    'images' : list( divisions[div][1:] )
+                } 
+                for div in divisions
+            ]
+        })
+
+        db.teams.insert_one({
+            'uid' : '000000000000',
+            'num' : '0000',
+            'score' : -1
+        })
+
+        db.teams.create_index( 
+            [('uid', pymongo.DESCENDING), ('competition', pymongo.DESCENDING)], 
+            unique=True, name='one_team_uid_per_comp' )
+        db.teams.create_index(
+            [('num', pymongo.DESCENDING), ('competition', pymongo.DESCENDING)],
+            unique=True, name='one_team_num_per_comp')
+        db.teams.create_index( 
+            [('competition', pymongo.DESCENDING), ('division', pymongo.DESCENDING)], 
+            unique=True, name='one_div_per_comp' )
+        
+        with open("alreadyInit", "w") as checkFile:
+            checkFile.writelines("completed")
+        print("MongoDB initiaization completed")
+
+    listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    listener.bind( (scoringServer['ip'], scoringServer['port'] ) )
+    listener.listen( int( listens * 1.5 ) )
+    print('Listener activated')
+
+    # main loop
+    while True:
+        imageSock, address = listener.accept()
+        print(f"Connection established with {address}")
+
+        thread = threading.Thread(target=handleImage, args=(imageSock,))
+        thread.start()
