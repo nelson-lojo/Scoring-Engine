@@ -19,7 +19,7 @@ function update(){
         if (this.status == 200) {
             entry = JSON.parse(this.responseText);
             var images = entry.images;
-            canvas.clearRect(0, 0, width, height);
+            canvas.clearRect(graphX, graphY, width, height);
             canvas.lineWidth = 1;
             
             //Graph Section

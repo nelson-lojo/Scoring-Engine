@@ -40,7 +40,7 @@ def handleImage(connection, connInfo):
         'timestamp' : datetime.datetime.utcnow()#.timestamp()
     }
     print(f"Received packet from image {imageInfo['imageID']}")
-    if (time:= datetime.datetime.now()) > imageInfo['startTime']:
+    if (time:= datetime.datetime.now()) < imageInfo['startTime']:
         print(f"Start time for image {imageInfo['imageID']} was spoofed to be {imageInfo['startTime']} at {datetime.datetime.now()}")
         return 
 
