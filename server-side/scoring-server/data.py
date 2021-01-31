@@ -26,8 +26,9 @@ dbInfo = {
     'ip' : '3.140.134.99',
     'port' : 27017,
     'name' : info['competitionName'],
-    'user' : '',
-    'passwd' : ''
+    'user' : 'nelly',
+    'passwd' : '',
+    'authdb' : 'admin'
 }
 
 

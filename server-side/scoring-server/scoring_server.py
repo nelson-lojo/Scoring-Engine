@@ -1,11 +1,28 @@
 from data import info, scoringServer, dbInfo, getDivision, listens, divisions
 import socket, pymongo, threading, datetime
 from os import path
+from getpass import getpass
+
+if dbInfo['user']:
+    db = pymongo.MongoClient(
+        dbInfo['ip'],
+        dbInfo['port'],
+        username=dbInfo['user'],
+        password=(
+            dbInfo['passwd'] or 
+            getpass('Enter the password for your db: ')
+            ),
+        authsource=dbInfo['authdb']
+    )
+else:
+    db = pymongo.MongoClient( 
+        dbInfo['ip'], 
+        dbInfo['port'],
+    ) [dbInfo['name']]
 
 if not (path.exists("alreadyInit")):
     # there's nothing in the checkfile, so 
-    # do init script
-    db = pymongo.MongoClient( dbInfo['ip'], dbInfo['port'] ) [dbInfo['name']]
+    # do init script    
 
     db.competitions.insert_one({ 
         'name' : info['competitionName'],
@@ -44,6 +61,7 @@ listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 listener.bind( (scoringServer['ip'], scoringServer['port'] ) )
 
 listener.listen( int( listens * 1.5 ) )
+print('Listener activated')
 
 def handleImage(connection):
     imageInfo = connection.recv(512).decode("utf-8")
