@@ -16,8 +16,8 @@ scoringServer = {
 # this should be a publicly accessible interface
 web = {
     'root' : './',
-    'ip' : '127.0.0.1',
-    'port' : int(8080)
+    'ip' : '0.0.0.0',
+    'port' : int(8000)
 }
 
 # this may (or may not) be a publicly accessible IP
