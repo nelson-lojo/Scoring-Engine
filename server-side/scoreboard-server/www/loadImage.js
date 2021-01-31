@@ -2,6 +2,8 @@ console.log("PhatBoi was here");
 var parentDiv = document.getElementById("score_graph");
 var cFrame = document.createElement('canvas');
 cFrame.setAttribute("id", "scoreboard");
+cFrame.setAttribute("width", parentDiv.clientWidth);
+cFrame.setAttribute("height", parentDiv.clientHeight);
 //cFrame.style.width = parentDiv.clientWidth;
 //cFrame.style.height = parentDiv.clientHeight;
 cFrame.style.border = "none";
