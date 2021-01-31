@@ -1,24 +1,28 @@
 from data import info, scoringServer, dbInfo, getDivision, listens, divisions
-import socket, pymongo, threading, datetime
-from os import path
 from getpass import getpass
+from os import path
+import socket, pymongo, threading, datetime
 
-if dbInfo['user']:
-    db = pymongo.MongoClient(
-        dbInfo['ip'],
-        dbInfo['port'],
-        username=dbInfo['user'],
-        password=(
-            dbInfo['passwd'] or 
-            getpass('Enter the password for your db: ')
-            ),
-        authsource=dbInfo['authdb']
-    )
-else:
-    db = pymongo.MongoClient( 
-        dbInfo['ip'], 
-        dbInfo['port'],
-    ) [dbInfo['name']]
+def dbConnect(connInfo):
+    if connInfo['user']:
+        db = pymongo.MongoClient(
+            connInfo['ip'],
+            connInfo['port'],
+            username=connInfo['user'],
+            password=(
+                connInfo['passwd'] or 
+                getpass('Enter the password for your db: ')
+                ),
+            authsource=connInfo['authdb']
+        ) [connInfo['name']]
+    else:
+        db = pymongo.MongoClient( 
+            connInfo['ip'], 
+            connInfo['port'],
+        ) [connInfo['name']]
+    return db
+    
+db = dbConnect(dbInfo)
 
 if not (path.exists("alreadyInit")):
     # there's nothing in the checkfile, so 
@@ -78,13 +82,12 @@ def handleImage(connection):
             ), # produces datetime.datetime object 
         'score' : int(imageInfo[4]),
         'vulnsFound' : int(imageInfo[5]),
-        'timestamp' : datetime.datetime.utcnow()
+        'timestamp' : datetime.datetime.utcnow()#.timestamp()
     }
     print(f"Received packet from image {imageInfo['imageID']}")
 
     # create a new client for each image connection
-    conn = pymongo.MongoClient( dbInfo['ip'], dbInfo['port'] )
-    db = conn[dbInfo['name']]
+    db = dbConnect(dbinfo)
 
     # add team if not already registered
     db.teams.update_one(

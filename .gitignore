@@ -1,3 +1,4 @@
 */__pycache__
 /server-side/scoring-server/uncommitted-postgresql
 /server-side/scoring-server/team-skeleton
+*/.vscode
