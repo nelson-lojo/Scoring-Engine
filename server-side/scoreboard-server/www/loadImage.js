@@ -11,7 +11,7 @@ var widthOffset = 40.0;
 var heightOffset = 20.0 + 120;
 var canvasWidth = cFrame.width;
 var canvasHeight = cFrame.height;
-alert(canvasWidth+" "+canvasHeight);
+//alert(canvasWidth+" "+canvasHeight);
 var width = canvasWidth - widthOffset;
 var height = canvasHeight - heightOffset;
 
@@ -83,11 +83,15 @@ function update(){
                 var dateTime = new Date(map(i, 0, labelAmount, startTime, endTime));
                 var timeString = dateTime.toLocaleString();
                 canvas.translate(width * i / labelAmount + graphX, height + graphY);
-                canvas.textAlign = 'center';
-                canvas.fillText("|", 0, 0);
+                var tickLength;
+                canvas.beginPath();
+                canvas.strokeStyle = "#b5b5b5"
+                canvas.moveTo(0, tickLength / 2);
+                canvas.lineTo(0, -tickLength / 2);
+                canvas.stroke();
                 canvas.textAlign = 'right';
                 canvas.rotate(-Math.PI/6);
-                canvas.fillText(timeString, 0, 0);
+                canvas.fillText(timeString, 0, 10);
                 canvas.restore();
             }
         }
