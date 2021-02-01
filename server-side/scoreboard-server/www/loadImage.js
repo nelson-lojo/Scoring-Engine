@@ -76,7 +76,7 @@ function update(){
             for(var i = 0; i <= maxScore / 10; i++){
                 canvas.fillText("" + i * 10, graphX,  height - (10 * height / maxScore) * i + graphY - 1);
             }
-            canvas.textAlign = 'center';
+            canvas.textAlign = 'left';
             var labelAmount = 10;
             for(var i = 1; i <= labelAmount; i++){
                 canvas.rotate(Math.PI/2);
