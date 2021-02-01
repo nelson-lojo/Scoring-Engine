@@ -137,8 +137,8 @@ def serveScoreInfo(teamid):
     )
     
 # testing route
-@app.route('/bruh')
-def bruh():
+@app.route('/bruh/<teamid>')
+def bruh(teamid):
     return render_template('index.html')
 
 if __name__ == "__main__":
