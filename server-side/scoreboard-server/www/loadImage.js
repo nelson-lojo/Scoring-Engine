@@ -7,14 +7,14 @@ cFrame.setAttribute("height", parentDiv.clientHeight);
 cFrame.style.border = "none";
 parentDiv.appendChild(cFrame);
 var canvas = cFrame.getContext("2d");
-var widthOffset = 0.0;
+var widthOffset = 40.0;
 var heightOffset = 20.0;
 var canvasWidth = cFrame.width;
 var canvasHeight = cFrame.height;
 var width = canvasWidth - widthOffset;
 var height = canvasHeight - heightOffset;
 
-var graphX = 0.0;
+var graphX = 40.0;
 var graphY = 20.0;
 
 function update(){
@@ -71,9 +71,10 @@ function update(){
             }
             
             //Labeling Section
-            canvas.font = "20px Arial";
+            canvas.font = "15px Arial";
+            canvas.textAlign = 'right';
             for(var i = 0; i <= maxScore / 10; i++){
-                canvas.fillText("" + i * 10, graphX,  height - (10 * height / maxScore) * i + graphY);
+                canvas.fillText("" + i * 10, graphX,  height - (10 * height / maxScore) * i + graphY - 1);
             }
         }
     };
