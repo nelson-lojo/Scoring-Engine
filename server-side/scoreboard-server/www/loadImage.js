@@ -75,7 +75,7 @@ function update(){
             canvas.font = "15px Arial";
             canvas.textAlign = 'right';
             for(var i = 0; i <= maxScore / 10; i++){
-                canvas.fillText("" + i * 10, graphX,  height - (10 * height / maxScore) * i + graphY - 1);
+                canvas.fillText("" + i * 10, graphX - 10,  height - (10 * height / maxScore) * i + graphY - 1);
             }
             var labelAmount = 10;
             for(var i = 1; i <= labelAmount; i++){
@@ -91,7 +91,7 @@ function update(){
                 canvas.stroke();
                 canvas.textAlign = 'right';
                 canvas.rotate(-Math.PI/4);
-                canvas.fillText(timeString, 5, 15);
+                canvas.fillText(timeString, -5, 15);
                 canvas.restore();
             }
         }
