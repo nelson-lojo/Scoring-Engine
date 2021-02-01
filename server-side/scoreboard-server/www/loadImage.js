@@ -80,11 +80,11 @@ function update(){
             var labelAmount = 10;
             for(var i = 1; i <= labelAmount; i++){
                 canvas.save();
-                var dateTime = map(i, 0, labelAmount, startTime, endTime);
-                var timeString = new Date(dateTime);
+                var dateTime = new Date(map(i, 0, labelAmount, startTime, endTime));
+                var timeString = dateTime.getMonth()+"/"+dateTime.getDay()+" "+dateTime.getHours()+":"+dateTime.getMinutes()+":"+dateTime.getSeconds();
                 canvas.translate(width * i / labelAmount + graphX, height + graphY);
-                canvas.rotate(Math.PI/2);
-                canvas.fillText(timeString.toString(), 0, 0);
+                canvas.rotate(-Math.PI/2);
+                canvas.fillText(timeString, 0, -15);
                 canvas.restore();
             }
         }
