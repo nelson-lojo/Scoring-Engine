@@ -8,9 +8,10 @@ cFrame.style.border = "none";
 parentDiv.appendChild(cFrame);
 var canvas = cFrame.getContext("2d");
 var widthOffset = 40.0;
-var heightOffset = 20.0 + 60;
+var heightOffset = 20.0 + 120;
 var canvasWidth = cFrame.width;
 var canvasHeight = cFrame.height;
+alert(canvasWidth+" "+canvasHeight);
 var width = canvasWidth - widthOffset;
 var height = canvasHeight - heightOffset;
 
@@ -76,15 +77,17 @@ function update(){
             for(var i = 0; i <= maxScore / 10; i++){
                 canvas.fillText("" + i * 10, graphX,  height - (10 * height / maxScore) * i + graphY - 1);
             }
-            canvas.textAlign = 'center';
             var labelAmount = 10;
             for(var i = 1; i <= labelAmount; i++){
                 canvas.save();
                 var dateTime = new Date(map(i, 0, labelAmount, startTime, endTime));
                 var timeString = dateTime.toLocaleString();
                 canvas.translate(width * i / labelAmount + graphX, height + graphY);
+                canvas.textAlign = 'center';
+                canvas.fillText("|", 0, 0);
+                canvas.textAlign = 'right';
                 canvas.rotate(-Math.PI/6);
-                canvas.fillText(timeString, 0, -8);
+                canvas.fillText(timeString, 0, 0);
                 canvas.restore();
             }
         }
