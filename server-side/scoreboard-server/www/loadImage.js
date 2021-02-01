@@ -2,7 +2,7 @@ console.log("PhatBoi was here");
 var parentDiv = document.getElementById("score_graph");
 var cFrame = document.createElement('canvas');
 cFrame.setAttribute("id", "scoreboard");
-cFrame.setAttribute("width", parentDiv.clientWidth * 0.99);
+cFrame.setAttribute("width", parentDiv.clientWidth);
 cFrame.setAttribute("height", parentDiv.clientHeight);
 cFrame.style.border = "none";
 parentDiv.appendChild(cFrame);
@@ -90,8 +90,8 @@ function update(){
                 canvas.lineTo(0, -tickLength / 2);
                 canvas.stroke();
                 canvas.textAlign = 'right';
-                canvas.rotate(-Math.PI/6);
-                canvas.fillText(timeString, 0, 10);
+                canvas.rotate(-Math.PI/4);
+                canvas.fillText(timeString, 5, 15);
                 canvas.restore();
             }
         }
