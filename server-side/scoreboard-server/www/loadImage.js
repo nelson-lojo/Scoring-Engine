@@ -9,8 +9,8 @@ parentDiv.appendChild(cFrame);
 var canvas = cFrame.getContext("2d");
 var widthOffset = 0.0;
 var heightOffset = 0.0;
-var canvasWidth = cFrame.width;//parentDiv.clientWidth;
-var canvasHeight = cFrame.height;//parentDiv.clientHeight;
+var canvasWidth = cFrame.width;
+var canvasHeight = cFrame.height;
 var width = canvasWidth - widthOffset;
 var height = canvasHeight - heightOffset;
 
@@ -29,6 +29,8 @@ function update(){
             canvas.clearRect(0, 0, canvasWidth, canvasHeight);
             canvas.lineWidth = 1;
             
+            var startTime = new Date(entry.startTime).getTime();
+            var endTime = new Date(entry.endTime).getTime();
             //Graph Section
             
             var maxScore = 0;
@@ -61,7 +63,9 @@ function update(){
                 for(var j = 0; j < images[i].scores.length; j++){
                     var mapHeight = map(images[i].scores[j].score, 0, maxScore, 0, height);
                     mapHeight = height - mapHeight;
-                    canvas.lineTo(width * (j + 1.0) / images[i].scores.length + graphX, mapHeight + graphY);
+                    var scoreTime = new Date(entry.images[i].scores[j].time).getTime();
+                    var mapWidth = map(scoreTime, startTime, endTime, 0, width);
+                    canvas.lineTo(mapWidth + graphX, mapHeight + graphY);
                 }
                 canvas.stroke();
             }
