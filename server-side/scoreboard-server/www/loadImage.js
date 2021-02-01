@@ -76,14 +76,16 @@ function update(){
             for(var i = 0; i <= maxScore / 10; i++){
                 canvas.fillText("" + i * 10, graphX,  height - (10 * height / maxScore) * i + graphY - 1);
             }
-            canvas.textAlign = 'left';
+            canvas.textAlign = 'center';
             var labelAmount = 10;
             for(var i = 1; i <= labelAmount; i++){
-                canvas.rotate(Math.PI/2);
+                canvas.save();
                 var dateTime = map(i, 0, labelAmount, startTime, endTime);
                 var timeString = new Date(dateTime);
-                canvas.fillText(timeString.toString(), 0 + graphY, width * i / labelAmount + graphX);
-                canvas.rotate(-Math.PI/2);
+                canvas.translate(width * i / labelAmount + graphX, height + graphY);
+                canvas.rotate(Math.PI/2);
+                canvas.fillText(timeString.toString(), 0, 0);
+                canvas.restore();
             }
         }
     };
