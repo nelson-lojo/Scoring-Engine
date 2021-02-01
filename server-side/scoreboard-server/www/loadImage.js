@@ -71,9 +71,9 @@ function update(){
             }
             
             //Labeling Section
-            canvas.font = "30px Arial";
+            canvas.font = "20px Arial";
             for(var i = 0; i <= maxScore / 10; i++){
-                canvas.fillText("" + i * 10, graphX, height - 10 * i + graphY);
+                canvas.fillText("" + i * 10, graphX,  height - (10 * height / maxScore) * i + graphY);
             }
         }
     };
