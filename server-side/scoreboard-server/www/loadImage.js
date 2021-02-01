@@ -8,7 +8,7 @@ cFrame.style.border = "none";
 parentDiv.appendChild(cFrame);
 var canvas = cFrame.getContext("2d");
 var widthOffset = 40.0;
-var heightOffset = 20.0 + 50;
+var heightOffset = 20.0 + 60;
 var canvasWidth = cFrame.width;
 var canvasHeight = cFrame.height;
 var width = canvasWidth - widthOffset;
@@ -83,8 +83,8 @@ function update(){
                 var dateTime = new Date(map(i, 0, labelAmount, startTime, endTime));
                 var timeString = dateTime.toLocaleString();
                 canvas.translate(width * i / labelAmount + graphX, height + graphY);
-                canvas.rotate(-Math.PI/2);
-                canvas.fillText(timeString, 0, -10);
+                canvas.rotate(-Math.PI/6);
+                canvas.fillText(timeString, 0, -8);
                 canvas.restore();
             }
         }
