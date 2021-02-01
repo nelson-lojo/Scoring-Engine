@@ -83,7 +83,7 @@ function update(){
                 var dateTime = new Date(map(i, 0, labelAmount, startTime, endTime));
                 var timeString = dateTime.toLocaleString();
                 canvas.translate(width * i / labelAmount + graphX, height + graphY);
-                var tickLength;
+                var tickLength = 5;
                 canvas.beginPath();
                 canvas.strokeStyle = "#b5b5b5"
                 canvas.moveTo(0, tickLength / 2);
