@@ -8,7 +8,7 @@ cFrame.style.border = "none";
 parentDiv.appendChild(cFrame);
 var canvas = cFrame.getContext("2d");
 var widthOffset = 40.0;
-var heightOffset = 20.0 + 120;
+var heightOffset = 20.0 + 80;
 var canvasWidth = cFrame.width;
 var canvasHeight = cFrame.height;
 //alert(canvasWidth+" "+canvasHeight);
@@ -81,7 +81,7 @@ function update(){
             for(var i = 1; i <= labelAmount; i++){
                 canvas.save();
                 var dateTime = new Date(map(i, 0, labelAmount, startTime, endTime));
-                var timeString = dateTime.toLocaleString();
+                var timeString = dateTime.toLocaleTimeString();
                 canvas.translate(width * i / labelAmount + graphX, height + graphY);
                 var tickLength = 5;
                 canvas.beginPath();
