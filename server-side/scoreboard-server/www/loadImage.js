@@ -8,7 +8,7 @@ cFrame.style.border = "none";
 parentDiv.appendChild(cFrame);
 var canvas = cFrame.getContext("2d");
 var widthOffset = 40.0;
-var heightOffset = 20.0;
+var heightOffset = 20.0 + 40;
 var canvasWidth = cFrame.width;
 var canvasHeight = cFrame.height;
 var width = canvasWidth - widthOffset;
@@ -47,7 +47,7 @@ function update(){
                 canvas.beginPath();
                 var drawHeight = height - (10 * height / maxScore) * i;
                 canvas.moveTo(0 + graphX, drawHeight + graphY);
-                canvas.lineTo(width + graphY, drawHeight + graphY);
+                canvas.lineTo(width + graphX, drawHeight + graphY);
                 canvas.stroke();
             }
             canvas.lineWidth = 3;
@@ -75,6 +75,15 @@ function update(){
             canvas.textAlign = 'right';
             for(var i = 0; i <= maxScore / 10; i++){
                 canvas.fillText("" + i * 10, graphX,  height - (10 * height / maxScore) * i + graphY - 1);
+            }
+            canvas.textAlign = 'center';
+            var labelAmount = 10;
+            for(var i = 1; i <= labelAmount; i++){
+                canvas.rotate(Math.PI/2);
+                var dateTime = map(i, 0, labelAmount, startTime, endTime);
+                var timeString = new Date(dateTime);
+                canvas.fillText(timeString.toString(), 0 + graphY, width * i / labelAmount + graphX);
+                canvas.rotate(-Math.PI/2);
             }
         }
     };
