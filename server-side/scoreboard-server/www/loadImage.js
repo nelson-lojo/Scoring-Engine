@@ -20,7 +20,7 @@ var graphY = 0.0;
 function update(){
 
     var xmlhttp = new XMLHttpRequest();
-    var url = "/info/601615d8288ab5a37daf9745";//+window.location.pathname;
+    var url = "/info/60177e30288ab5a37dafcfe0";//+window.location.pathname;
     var entry;
     xmlhttp.onload = function() {
         if (this.status == 200) {
