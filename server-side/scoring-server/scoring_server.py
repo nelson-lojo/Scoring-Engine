@@ -62,7 +62,7 @@ def handleImage(connection, connInfo):
                 'endTime' : imageInfo['timestamp'],
                 'score' : 0,
                 'warn' : {
-                    'multipleInstance' : [],
+                    'multipleInstance' : False,
                     'timeExceeded' : False,
                 }
             }
@@ -125,14 +125,17 @@ def handleImage(connection, connInfo):
             }
         ])
     )
-    if len(im_scores):
+    multipleInstance = False
+    timeExceeded = False
+
+    if len(im_scores):#and im_scores[0]!=None:
+        print(f"returned query: {im_scores}")
         multipleInstance = ( 
             im_scores[0]['last']['imageID'] != imageInfo['imageID']
                 and 
             im_scores[0]['lastLast']['imageID'] == imageInfo['imageID'] 
         )
-    else:
-        multipleInstance = False 
+        timeExceeded = (imageInfo['timestamp'] - im_scores['start']) > info['maxTime']
 
     # update image info
     db.teams.update_one(
@@ -158,7 +161,7 @@ def handleImage(connection, connInfo):
                     'time' : imageInfo['timestamp'],
                     'warn' : {
                         'multipleInstance' : multipleInstance,
-                        'timeExceeded' : (imageInfo['timestamp'] - im_scores['start']) > info['maxTime']
+                        'timeExceeded' : timeExceeded
                     }
                 }
             }
@@ -178,6 +181,10 @@ def handleImage(connection, connInfo):
             }, {
                 '$set' : {
                     'score' : sum([img['score'] for img in images])
+                    'warn' : {
+                        'multipleInstance' : multipleInstance,
+                        'timeExceeded' : False,
+                    }
                 }
             }
         )
