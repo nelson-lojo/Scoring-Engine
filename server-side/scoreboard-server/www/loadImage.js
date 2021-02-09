@@ -40,15 +40,13 @@ function update(){
                 canvas.fillRect(canvasWidth - 20, 20 * i + canvasHeight / 4, 10, 10);
                 canvas.font = "15px Arial";
                 canvas.textAlign = 'right';
-                var cms = canvas.measureText(name);
-                alert("cms: "+name+" "+cms)
+                var cms = canvas.measureText(name).width;
                 if(cms > length)
                     legendLength = cms;
                 canvas.fillText(name, canvasWidth - 30, 10 + 20 * i + canvasHeight / 4);
             }
             legendLength += 20;
             width -= legendLength;
-            alert(width);
             canvas.lineWidth = 1;
             
             //Graph Section
