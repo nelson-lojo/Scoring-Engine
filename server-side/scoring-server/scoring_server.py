@@ -125,10 +125,10 @@ def handleImage(connection, connInfo):
             }
         ])
     )
-    multipleInstance = im_scores and ( 
-        im_scores[0]['last']['imageID'] != imageInfo[0]['imageID']
+    multipleInstance = bool(im_scores) and ( 
+        im_scores[0]['last']['imageID'] != imageInfo['imageID']
             and 
-        im_scores[0]['lastLast']['imageID'] == imageInfo[0]['imageID'] )
+        im_scores[0]['lastLast']['imageID'] == imageInfo['imageID'] )
 
     # update image info
     db.teams.update_one(
