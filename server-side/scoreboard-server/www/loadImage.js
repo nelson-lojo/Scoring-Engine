@@ -8,12 +8,9 @@ cFrame.style.border = "none";
 parentDiv.appendChild(cFrame);
 var canvas = cFrame.getContext("2d");
 var widthOffset = 35.0;
-var heightOffset = 20.0 + 80;
+var heightOffset = 20.0 + 80 ;
 var canvasWidth = cFrame.width;
 var canvasHeight = cFrame.height;
-//alert(canvasWidth+" "+canvasHeight);
-var width = canvasWidth - widthOffset;
-var height = canvasHeight - heightOffset;
 
 var graphX = 35.0;
 var graphY = 20.0;
@@ -25,13 +22,33 @@ function update(){
     var entry;
     xmlhttp.onload = function() {
         if (this.status == 200) {
+            var width = canvasWidth - widthOffset;
+            var height = canvasHeight - heightOffset;
             entry = JSON.parse(this.responseText);
             var images = entry.images;
             canvas.clearRect(0, 0, canvasWidth, canvasHeight);
-            canvas.lineWidth = 1;
             
             var startTime = new Date(entry.startTime).getTime();
             var endTime = new Date(entry.endTime).getTime();
+            
+            var lineColors = ["#FF0000", "#E6E600", "#0000FF", "#00FF00", "#FF9900", "#FF00FF"];
+            //Legend
+            var legendLength = 0;
+            for(var i = 0; i < images.length; i++){
+                var name = images[i].name;
+                canvas.fillStyle = lineColors[i % lineColors.length];
+                canvas.fillRect(canvasWidth - 20, 20 * i + canvasHeight / 4, 10, 10);
+                canvas.font = "15px Arial";
+                canvas.textAlign = 'right';
+                var cms = canvas.measureText(name).width;
+                if(cms > length)
+                    legendLength = cms;
+                canvas.fillText(name, canvasWidth - 30, 10 + 20 * i + canvasHeight / 4);
+            }
+            legendLength += 30;
+            width -= legendLength;
+            canvas.lineWidth = 1;
+            
             //Graph Section
             
             var maxScore = 0;
@@ -53,12 +70,7 @@ function update(){
             }
             canvas.lineWidth = 3;
             for(var i = 0; i < images.length; i++){
-                if (i % 3 == 0)
-                    canvas.strokeStyle = "#FF0000";
-                else if (i % 3 == 1)
-                    canvas.strokeStyle = "#00FF00";
-                else
-                    canvas.strokeStyle = "#0000FF";
+                canvas.strokeStyle = lineColors[i % lineColors.length];
                 canvas.beginPath();
                 canvas.moveTo(0 + graphX, height + graphY);
                 for(var j = 0; j < images[i].scores.length; j++){
@@ -74,6 +86,7 @@ function update(){
             //Labeling Section
             canvas.font = "15px Arial";
             canvas.textAlign = 'right';
+            canvas.fillStyle = "#000000";
             for(var i = 0; i <= maxScore / 10; i++){
                 canvas.fillText("" + i * 10, graphX - 10,  height - (10 * height / maxScore) * i + graphY - 1);
             }
