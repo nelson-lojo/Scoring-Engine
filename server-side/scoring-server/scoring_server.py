@@ -202,12 +202,6 @@ if __name__ == '__main__':
             ]
         })
 
-        db.teams.insert_one({
-            'uid' : '000000000000',
-            'num' : '0000',
-            'score' : -1
-        })
-
         db.teams.create_index( 
             [('uid', pymongo.DESCENDING), ('competition', pymongo.DESCENDING)], 
             unique=True, name='one_team_uid_per_comp' )
@@ -216,7 +210,7 @@ if __name__ == '__main__':
             unique=True, name='one_team_num_per_comp')
         db.teams.create_index( 
             [('competition', pymongo.DESCENDING), ('division', pymongo.DESCENDING)], 
-            unique=True, name='one_div_per_comp' )
+            unique=False, name='comp_and_div_lookup' )
         
         with open("alreadyInit", "w") as checkFile:
             checkFile.writelines("completed")
@@ -234,18 +228,3 @@ if __name__ == '__main__':
 
         thread = threading.Thread(target=handleImage, args=(imageSock, dbInfo,))
         thread.start()
-
-
-
-
-
-
-# db.teams.find(
-#     {
-#         uid : 'cleanXY',
-#         competition : 'PracticeRound',
-#         'images.name' : 'WinblowsServer69R420'
-#     }, {
-#         warn : 1,
-#     }
-# )
