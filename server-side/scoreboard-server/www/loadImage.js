@@ -11,8 +11,6 @@ var widthOffset = 35.0;
 var heightOffset = 20.0 + 80 ;
 var canvasWidth = cFrame.width;
 var canvasHeight = cFrame.height;
-var width = canvasWidth - widthOffset;
-var height = canvasHeight - heightOffset;
 
 var graphX = 35.0;
 var graphY = 20.0;
@@ -24,6 +22,8 @@ function update(){
     var entry;
     xmlhttp.onload = function() {
         if (this.status == 200) {
+            var width = canvasWidth - widthOffset;
+            var height = canvasHeight - heightOffset;
             entry = JSON.parse(this.responseText);
             var images = entry.images;
             canvas.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -45,7 +45,7 @@ function update(){
                     legendLength = cms;
                 canvas.fillText(name, canvasWidth - 30, 10 + 20 * i + canvasHeight / 4);
             }
-            legendLength += 20;
+            legendLength += 30;
             width -= legendLength;
             canvas.lineWidth = 1;
             
