@@ -137,7 +137,7 @@ function loadTeams(amount) {
                     window.location="team/" + team._id
                 }) 
                 uid = document.createElement("TD");
-                uid.innerHTML = team.uid;
+                uid.innerHTML = team.num;
 
                 comp = document.createElement("TD");
                 comp.innerHTML = team.competition;
