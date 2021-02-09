@@ -27,7 +27,6 @@ function update(){
             entry = JSON.parse(this.responseText);
             var images = entry.images;
             canvas.clearRect(0, 0, canvasWidth, canvasHeight);
-            canvas.lineWidth = 1;
             
             var startTime = new Date(entry.startTime).getTime();
             var endTime = new Date(entry.endTime).getTime();
@@ -47,6 +46,8 @@ function update(){
             }
             legendLength += 20;
             width -= legendLength;
+            alert(width);
+            canvas.lineWidth = 1;
             
             //Graph Section
             
