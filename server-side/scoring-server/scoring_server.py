@@ -125,9 +125,10 @@ def handleImage(connection, connInfo):
             }
         ])
     )
-    multipleInstance = bool(im_scores) and ( 
-        im_scores[0]['last']['imageID'] != imageInfo['imageID']
-            and 
+    if len(im_scores):
+        multipleInstance = ( 
+            im_scores[0]['last']['imageID'] != imageInfo['imageID']
+                and 
             im_scores[0]['lastLast']['imageID'] == imageInfo['imageID'] 
         )
     else:
