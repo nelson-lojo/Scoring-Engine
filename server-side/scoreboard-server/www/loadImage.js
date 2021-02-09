@@ -41,11 +41,11 @@ function update(){
                 canvas.font = "15px Arial";
                 canvas.textAlign = 'right';
                 var cms = canvas.measureText(name).width;
-                if(cms > length)
+                if(cms > legendLength)
                     legendLength = cms;
                 canvas.fillText(name, canvasWidth - 30, 10 + 20 * i + canvasHeight / 4);
             }
-            legendLength += 30;
+            legendLength += 20;
             width -= legendLength;
             canvas.lineWidth = 1;
             
