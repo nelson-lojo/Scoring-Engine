@@ -131,12 +131,13 @@ function loadTeams(amount) {
                 } else {
                     team.endTime = new Date( Date.parse(team.endTime) );
                 }
-                playtime = team.endTime.getTime() - team.startTime.getTime();  // make sure these are date objects #* 
+                playtime = team.endTime.getTime() - team.startTime.getTime();  // make sure these are date objects #*
+                var hyperlink = document.createElement("a");
+                hyperlink.setAttribute("href", "/team/"+team._id);
                 var row = document.createElement("TR");
-                var teamID = team._id;
-                row.addEventListener('click', (event) => {
+                /*row.addEventListener('click', (event) => {
                     window.location="team/" + teamID;
-                }) 
+                }) */
                 uid = document.createElement("TD");
                 uid.innerHTML = team.num;
 
@@ -159,7 +160,8 @@ function loadTeams(amount) {
                 row.appendChild(score);
                 
                 console.log(["Loaded team:", team]);
-                table.appendChild(row)
+                hyperlink.appendChild(row);
+                table.appendChild(hyperlink)
             }
         }
     };
