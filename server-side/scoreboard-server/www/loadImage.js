@@ -45,7 +45,7 @@ function update(){
                     legendLength = cms;
                 canvas.fillText(name, canvasWidth - 30, 10 + 20 * i + canvasHeight / 4);
             }
-            legendLength += 20;
+            legendLength += 30;
             width -= legendLength;
             canvas.lineWidth = 1;
             
