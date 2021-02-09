@@ -45,7 +45,7 @@ function update(){
                     legendLength = cms;
                 canvas.fillText(name, canvasWidth - 30, 10 + 20 * i + canvasHeight / 4);
             }
-            legendLength += 30;
+            legendLength += 35;
             width -= legendLength;
             canvas.lineWidth = 1;
             
@@ -107,6 +107,9 @@ function update(){
                 canvas.fillText(timeString, -15, 15);
                 canvas.restore();
             }
+            //Update
+            var timeUpdate = document.getElementById("gentime");
+            timeUpdate.innerHTML = "" + new Date().toUTCString();
         }
     };
     xmlhttp.open("GET", url);
