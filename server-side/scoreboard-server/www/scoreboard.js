@@ -150,13 +150,17 @@ function loadTeams(amount) {
                 playtyme.innerHTML =  Math.floor(playtime / (1000 * 3600)) + ':' + Math.floor(playtime / (1000 * 60) % 60);
                 
                 score = document.createElement("TD");
-                score.innerHTML = team.score
+                score.innerHTML = team.score;
+                
+                warn = document.createElement("TD");
+                warn.innerHTML = "TODO";
                 
                 row.appendChild(uid);
                 row.appendChild(comp);
                 row.appendChild(div);
                 row.appendChild(playtyme);
                 row.appendChild(score);
+                row.appendChild(warn);
                 
                 console.log(["Loaded team:", team]);
                 table.appendChild(row)
