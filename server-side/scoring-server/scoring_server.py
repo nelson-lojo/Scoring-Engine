@@ -45,8 +45,8 @@ def handleImage(connection, connInfo):
         return 
 
     # create a new client for each image connection
-    conn = dbConnect(connInfo)
-    db = conn[connInfo['name']]
+    conn = dbConnect(dbInfo)
+    db = conn[dbInfo['name']]
 
     # add team if not already registered
     db.teams.update_one(
@@ -60,7 +60,11 @@ def handleImage(connection, connInfo):
                 'num' : imageInfo['teamID'][:4],
                 'division' : getDivision(imageInfo['teamID']),
                 'endTime' : imageInfo['timestamp'],
-                'score' : 0
+                'score' : 0,
+                'warn' : {
+                    'multipleInstance' : [],
+                    'timeExceeded' : False,
+                }
             }
         }, 
         upsert=True
@@ -102,6 +106,66 @@ def handleImage(connection, connInfo):
         }
     )
 
+    # get the last two packets recieved
+    im_scores = list(
+        db.teams.aggregate([
+            {
+                '$match' : {
+                        'uid': imageInfo['teamID'], 
+                        'competition': info['competitionName']
+                }
+            },
+            { '$unwind': '$images' },
+            { '$match': {'images.name': imageInfo['os'] } },
+            { '$project' : {
+                    'lastLast' : { '$arrayElemAt' : [ "$images.scores", 0 ] },
+                    'last' : { '$arrayElemAt' : [ "$images.scores", 0 ] }
+                }
+            }
+        ])
+    )
+
+    if im_scores:
+        im_scores = im_scores[0]
+        if ( im_scores['last']['imageID'] != imageInfo['imageID']
+            and 
+            im_scores['lastLast']['imageID'] == imageInfo['imageID'] 
+            ):
+
+            db.teams.update_one(
+                {
+                    'uid' : imageInfo['teamID'],
+                    'competition' : imageInfo['competitionName'],
+                    'images.name' : imageInfo['os']
+                }, {
+                    # set the image.warn tag properly
+                    '$push' : {
+                        'images.$.warn.multipleInstance' : {
+                            'start' : datetime.datetime.now(),
+                        }
+                    }
+                }
+            )
+            # THEY HAVE TWO IMAGES RUNNING
+        elif (# they have an active warning):
+
+            # end the warning
+            db.teams.update_one(
+                {
+                    'uid' : imageInfo['teamID'],
+                    'competition' : imageInfo['competitionName'],
+                    'images.name' : imageInfo['os']
+                }, {
+                    # set the image.warn tag properly
+                    '$push' : {
+                        'images.$.warn.multipleInstance' : {
+                            'end' : datetime.datetime.now()
+                        }
+                    }
+                }
+            )
+
+
     # update image info
     db.teams.update_one(
         { 
@@ -130,7 +194,7 @@ def handleImage(connection, connInfo):
     )
 
     # update composite score
-    team = list( 
+    team = list(
         db.teams.find({ 'uid' : imageInfo['teamID'] }, { 'images' : 1 }) 
         )
     if team:
@@ -202,3 +266,25 @@ if __name__ == '__main__':
 
         thread = threading.Thread(target=handleImage, args=(imageSock, dbInfo,))
         thread.start()
+
+
+
+
+
+scores = list(
+    db.teams.aggregate([
+        {
+            '$match' : {
+                    'uid':'cleanXY', 
+                    'competition': 'PracticeRound'
+            }
+        },
+        { '$unwind': '$images'},
+        { '$match': {'images.name': 'WinblowsServer69R420'}},           
+        { '$project' : {
+                'lastLast' : { '$arrayElemAt' : [ "$images.scores", 0 ] },
+                'last' : { '$arrayElemAt' : [ "$images.scores", 0 ] }
+            }
+        }
+    ])
+)[0]

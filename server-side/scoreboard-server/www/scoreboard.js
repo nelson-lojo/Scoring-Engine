@@ -128,7 +128,9 @@ function loadTeams(amount) {
                 team.startTime = new Date( Date.parse(team.startTime) );
                 if (!team.hasOwnProperty('endTime')) {
                     team.endTime = new Date();
-                } 
+                } else {
+                    team.endTime = new Date( Date.parse(team.endTime) );
+                }
                 playtime = team.endTime.getTime() - team.startTime.getTime();  // make sure these are date objects #* 
                 row = document.createElement("TR")
                 row.addEventListener('click', (event) => {

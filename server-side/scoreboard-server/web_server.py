@@ -76,7 +76,7 @@ def postTeams(loaded=0):
                     'competition' : {'$regex': '.*'}#comp
                 }, {
                     '_id' : 1,
-                    'uid' : 1,
+                    'num' : 1,
                     'competition' : 1,
                     'division' : 1,
                     'startTime' : 1,
