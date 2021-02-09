@@ -10,7 +10,9 @@ info = {
         hours=6,
         minutes=0,
         seconds=0
-    )
+    ),
+    # this is the farthest ahead a team's start time can be ahead of now()
+    'timingTolerance' : datetime.timedelta(seconds=5)
 }
 
 # this should be a publicly accessible interface

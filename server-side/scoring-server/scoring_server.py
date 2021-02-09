@@ -40,8 +40,8 @@ def handleImage(connection, connInfo):
         'timestamp' : datetime.datetime.utcnow()#.timestamp()
     }
     print(f"Received packet from image {imageInfo['imageID']}")
-    if (time:= datetime.datetime.now()) < imageInfo['startTime']:
-        print(f"Start time for image {imageInfo['imageID']} was spoofed to be {imageInfo['startTime']} at {datetime.datetime.now()}")
+    if imageInfo['startTime'] - (time:= datetime.datetime.now()) > info['timingTolerance']:
+        print(f"Start time for image {imageInfo['imageID']} was spoofed to be {imageInfo['startTime']} at {datetime.datetime.now()}, exceeding the tolerance of {info['timingTolerance']}")
         return 
 
     # create a new client for each image connection
@@ -128,12 +128,16 @@ def handleImage(connection, connInfo):
     multipleInstance = False
     timeExceeded = False
 
-    if len(im_scores):#and im_scores[0]!=None:
+    if len(im_scores):
         print(f"returned query: {im_scores}")
-        multipleInstance = ( 
-            im_scores[0]['last']['imageID'] != imageInfo['imageID']
+        
+        last = im_scores[0]['last']
+        lastLast = im_scores[0]['lastLast']
+
+        multipleInstance = last and lastLast and ( 
+            last['imageID'] != imageInfo['imageID']
                 and 
-            im_scores[0]['lastLast']['imageID'] == imageInfo['imageID'] 
+            lastLast['imageID'] == imageInfo['imageID'] 
         )
         timeExceeded = (imageInfo['timestamp'] - im_scores['start']) > info['maxTime']
 
@@ -150,7 +154,11 @@ def handleImage(connection, connInfo):
             # set image score
             '$set' : { 
                 'images.$.score' : imageInfo['score'],
-                'images.$.vulns' : imageInfo['vulnsFound'] 
+                'images.$.vulns' : imageInfo['vulnsFound'],
+                'warn' : {
+                    'multipleInstance' : multipleInstance,
+                    'timeExceeded' : timeExceeded
+                }
             },
             # add score record to list
             '$push' : {
@@ -183,7 +191,7 @@ def handleImage(connection, connInfo):
                     'score' : sum([img['score'] for img in images]),
                     'warn' : {
                         'multipleInstance' : multipleInstance,
-                        'timeExceeded' : False,
+                        'timeExceeded' : timeExceeded,
                     }
                 }
             }
