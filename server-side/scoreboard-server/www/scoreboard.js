@@ -132,9 +132,8 @@ function loadTeams(amount) {
                     team.endTime = new Date( Date.parse(team.endTime) );
                 }
                 playtime = team.endTime.getTime() - team.startTime.getTime();  // make sure these are date objects #*
-                var hyperlink = document.createElement("a");
-                hyperlink.setAttribute("href", "/team/"+team._id);
                 var row = document.createElement("TR");
+                row.setAttribute("href", "/team/"+team._id);
                 /*row.addEventListener('click', (event) => {
                     window.location="team/" + teamID;
                 }) */
@@ -160,8 +159,7 @@ function loadTeams(amount) {
                 row.appendChild(score);
                 
                 console.log(["Loaded team:", team]);
-                hyperlink.appendChild(row);
-                table.appendChild(hyperlink)
+                table.appendChild(row)
             }
         }
     };
