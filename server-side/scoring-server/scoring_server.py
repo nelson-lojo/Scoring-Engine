@@ -131,14 +131,13 @@ def handleImage(connection, connInfo):
     if len(im_scores):
         query = im_scores[0]
         print(f"returned query: {query}")
-        
-        last = query['last']
-        lastLast = query['lastLast']
 
-        multipleInstance = last and lastLast and ( 
-            last['imageID'] != imageInfo['imageID']
+        exists = bool(query['last']) and bool(query['lastLast'])
+
+        multipleInstance = exists and ( 
+            query['last']['imageID'] != imageInfo['imageID']
                 and 
-            lastLast['imageID'] == imageInfo['imageID'] 
+            query['lastLast']['imageID'] == imageInfo['imageID'] 
         )
         timeExceeded = (imageInfo['timestamp'] - query['start']) > info['maxTime']
 
