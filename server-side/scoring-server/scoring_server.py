@@ -118,53 +118,21 @@ def handleImage(connection, connInfo):
             { '$unwind': '$images' },
             { '$match': {'images.name': imageInfo['os'] } },
             { '$project' : {
-                    'lastLast' : { '$arrayElemAt' : [ "$images.scores", 0 ] },
-                    'last' : { '$arrayElemAt' : [ "$images.scores", 0 ] }
+                    'start' : '$images.startTime',
+                    'lastLast' : { '$arrayElemAt' : [ "$images.scores", -2 ] },
+                    'last' : { '$arrayElemAt' : [ "$images.scores", -1 ] }
                 }
             }
         ])
     )
-
-    if im_scores:
-        im_scores = im_scores[0]
-        if ( im_scores['last']['imageID'] != imageInfo['imageID']
-            and 
-            im_scores['lastLast']['imageID'] == imageInfo['imageID'] 
-            ):
-
-            db.teams.update_one(
-                {
-                    'uid' : imageInfo['teamID'],
-                    'competition' : imageInfo['competitionName'],
-                    'images.name' : imageInfo['os']
-                }, {
-                    # set the image.warn tag properly
-                    '$push' : {
-                        'images.$.warn.multipleInstance' : {
-                            'start' : datetime.datetime.now(),
-                        }
-                    }
-                }
-            )
-            # THEY HAVE TWO IMAGES RUNNING
-        elif (# they have an active warning):
-
-            # end the warning
-            db.teams.update_one(
-                {
-                    'uid' : imageInfo['teamID'],
-                    'competition' : imageInfo['competitionName'],
-                    'images.name' : imageInfo['os']
-                }, {
-                    # set the image.warn tag properly
-                    '$push' : {
-                        'images.$.warn.multipleInstance' : {
-                            'end' : datetime.datetime.now()
-                        }
-                    }
-                }
-            )
-
+    if len(im_scores):
+        multipleInstance = ( 
+            im_scores[0]['last']['imageID'] != imageInfo['imageID']
+                and 
+            im_scores[0]['lastLast']['imageID'] == imageInfo['imageID'] 
+        )
+    else:
+        multipleInstance = False 
 
     # update image info
     db.teams.update_one(
@@ -187,7 +155,11 @@ def handleImage(connection, connInfo):
                     'imageID' : imageInfo['imageID'],
                     'score' : imageInfo['score'],
                     'vulns' : imageInfo['vulnsFound'],
-                    'time' : imageInfo['timestamp']
+                    'time' : imageInfo['timestamp'],
+                    'warn' : {
+                        'multipleInstance' : multipleInstance,
+                        'timeExceeded' : (imageInfo['timestamp'] - im_scores['start']) > info['maxTime']
+                    }
                 }
             }
         }
@@ -234,12 +206,6 @@ if __name__ == '__main__':
             ]
         })
 
-        db.teams.insert_one({
-            'uid' : '000000000000',
-            'num' : '0000',
-            'score' : -1
-        })
-
         db.teams.create_index( 
             [('uid', pymongo.DESCENDING), ('competition', pymongo.DESCENDING)], 
             unique=True, name='one_team_uid_per_comp' )
@@ -248,7 +214,7 @@ if __name__ == '__main__':
             unique=True, name='one_team_num_per_comp')
         db.teams.create_index( 
             [('competition', pymongo.DESCENDING), ('division', pymongo.DESCENDING)], 
-            unique=True, name='one_div_per_comp' )
+            unique=False, name='comp_and_div_lookup' )
         
         with open("alreadyInit", "w") as checkFile:
             checkFile.writelines("completed")
@@ -261,30 +227,10 @@ if __name__ == '__main__':
 
     # main loop
     while True:
-        imageSock, address = listener.accept()
-        # print(f"Connection established with {address}")
+        try:
+            imageSock, address = listener.accept()
 
-        thread = threading.Thread(target=handleImage, args=(imageSock, dbInfo,))
-        thread.start()
-
-
-
-
-
-scores = list(
-    db.teams.aggregate([
-        {
-            '$match' : {
-                    'uid':'cleanXY', 
-                    'competition': 'PracticeRound'
-            }
-        },
-        { '$unwind': '$images'},
-        { '$match': {'images.name': 'WinblowsServer69R420'}},           
-        { '$project' : {
-                'lastLast' : { '$arrayElemAt' : [ "$images.scores", 0 ] },
-                'last' : { '$arrayElemAt' : [ "$images.scores", 0 ] }
-            }
-        }
-    ])
-)[0]
+            thread = threading.Thread(target=handleImage, args=(imageSock, dbInfo,))
+            thread.start()
+        except:
+            listener.close()
