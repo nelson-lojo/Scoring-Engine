@@ -8,14 +8,14 @@ cFrame.style.border = "none";
 parentDiv.appendChild(cFrame);
 var canvas = cFrame.getContext("2d");
 var widthOffset = 35.0;
-var heightOffset = 20.0 + 80;
+var heightOffset = 20.0 + 80 + 80;
 var canvasWidth = cFrame.width;
 var canvasHeight = cFrame.height;
 var width = canvasWidth - widthOffset;
 var height = canvasHeight - heightOffset;
 
 var graphX = 35.0;
-var graphY = 20.0;
+var graphY = 20.0 + 80;
 
 function update(){
 
@@ -51,7 +51,7 @@ function update(){
                 canvas.stroke();
             }
             canvas.lineWidth = 3;
-            var lineColors = ["#FF0000", "#FFFF00", "#0000FF", "#00FF00", "#FF9900", "#FF00FF"];
+            var lineColors = ["#FF0000", "#E6E600", "#0000FF", "#00FF00", "#FF9900", "#FF00FF"];
             for(var i = 0; i < images.length; i++){
                 canvas.strokeStyle = lineColors[i % lineColors.length];
                 canvas.beginPath();
@@ -71,7 +71,7 @@ function update(){
                 canvas.fillRect(canvasWidth - 20, 20 + i * 20, 10, 10);
                 canvas.font = "15px Arial";
                 canvas.textAlign = 'right';
-                canvas.fillText(name, canvasWidth - 30, 20 * i + 40);
+                canvas.fillText(name, canvasWidth - 30, 20 * i + 30);
             }
             
             //Labeling Section
