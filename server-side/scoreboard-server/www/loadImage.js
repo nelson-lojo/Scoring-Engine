@@ -35,7 +35,6 @@ function update(){
             //Legend
             var legendLength = 0;
             for(var i = 0; i < images.length; i++){
-                //Legend
                 var name = images[i].name;
                 canvas.fillStyle = lineColors[i % lineColors.length];
                 canvas.fillRect(canvasWidth - 20, 20 * i + canvasHeight / 4, 10, 10);
