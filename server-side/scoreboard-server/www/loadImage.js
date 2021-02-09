@@ -28,6 +28,7 @@ function update(){
             //Team Info Summary
             var tbody = document.getElementById("teamInfoSummary");
             tbody.innerHTML = "";
+            var tableRow = document.createElement("tr");
             var _id = document.createElement("td");
             var _div = document.createElement("td");
             var _im_no = document.createElement("td");
@@ -47,12 +48,13 @@ function update(){
             _play_time.innerHTML = Math.floor(passedTime / 3600) + ":" + Math.floor((passedTime % 3600) / 60);
             _total_score.innerHTML = "" + entry.score;
             _warnings.innerHTML = "TODO";
-            tbody.appendChild(_id);
-            tbody.appendChild(_div);
-            tbody.appendChild(_im_no);
-            tbody.appendChild(_play_time);
-            tbody.appendChild(_total_score);
-            tbody.appendChild(_warnings);
+            tableRow.appendChild(_id);
+            tableRow.appendChild(_div);
+            tableRow.appendChild(_im_no);
+            tableRow.appendChild(_play_time);
+            tableRow.appendChild(_total_score);
+            tableRow.appendChild(_warnings);
+            tbody.appendChild(tableRow);
             
             
             var images = entry.images;
