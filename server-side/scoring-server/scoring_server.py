@@ -223,8 +223,10 @@ if __name__ == '__main__':
 
     # main loop
     while True:
-        imageSock, address = listener.accept()
-        # print(f"Connection established with {address}")
+        try:
+            imageSock, address = listener.accept()
 
-        thread = threading.Thread(target=handleImage, args=(imageSock, dbInfo,))
-        thread.start()
+            thread = threading.Thread(target=handleImage, args=(imageSock, dbInfo,))
+            thread.start()
+        except:
+            listener.close()
