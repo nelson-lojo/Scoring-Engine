@@ -143,6 +143,10 @@ def handleImage(connection, connInfo):
         )
         timeExceeded = (imageInfo['timestamp'] - query['start']) > info['maxTime']
 
+    warnDict = {
+        'multipleInstance' : multipleInstance,
+        'timeExceeded' : timeExceeded
+    }
     # update image info
     db.teams.update_one(
         { 
@@ -157,10 +161,7 @@ def handleImage(connection, connInfo):
             '$set' : { 
                 'images.$.score' : imageInfo['score'],
                 'images.$.vulns' : imageInfo['vulnsFound'],
-                'warn' : {
-                    'multipleInstance' : multipleInstance,
-                    'timeExceeded' : timeExceeded
-                }
+                'images.$.warn' : warnDict
             },
             # add score record to list
             '$push' : {
@@ -169,10 +170,7 @@ def handleImage(connection, connInfo):
                     'score' : imageInfo['score'],
                     'vulns' : imageInfo['vulnsFound'],
                     'time' : imageInfo['timestamp'],
-                    'warn' : {
-                        'multipleInstance' : multipleInstance,
-                        'timeExceeded' : timeExceeded
-                    }
+                    'warn' : warnDict
                 }
             }
         }
@@ -191,10 +189,7 @@ def handleImage(connection, connInfo):
             }, {
                 '$set' : {
                     'score' : sum([img['score'] for img in images]),
-                    'warn' : {
-                        'multipleInstance' : multipleInstance,
-                        'timeExceeded' : timeExceeded,
-                    }
+                    'warn' : warnDict
                 }
             }
         )
