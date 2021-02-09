@@ -1,9 +1,16 @@
+from datetime import timedelta
 info = {
     'competitionName' : 'PracticeRound',
-    'divIDLen' : 2  # must be stricly < 8
-                    # the shorter it is, 
+    'divIDLen' : 2, # must be stricly < 8
+                    # the longer it is, 
                     #   the easier it is to 
                     #   impersonate another team
+    'maxTime' : timedelta(
+        days=0,
+        hours=6,
+        minutes=0,
+        seconds=0
+    )
 }
 
 # this should be a publicly accessible interface

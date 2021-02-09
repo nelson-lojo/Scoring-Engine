@@ -118,53 +118,17 @@ def handleImage(connection, connInfo):
             { '$unwind': '$images' },
             { '$match': {'images.name': imageInfo['os'] } },
             { '$project' : {
-                    'lastLast' : { '$arrayElemAt' : [ "$images.scores", 0 ] },
-                    'last' : { '$arrayElemAt' : [ "$images.scores", 0 ] }
+                    'start' : '$images.startTime',
+                    'lastLast' : { '$arrayElemAt' : [ "$images.scores", -2 ] },
+                    'last' : { '$arrayElemAt' : [ "$images.scores", -1 ] }
                 }
             }
         ])
     )
-
-    if im_scores:
-        im_scores = im_scores[0]
-        if ( im_scores['last']['imageID'] != imageInfo['imageID']
+    multipleInstance = im_scores and ( 
+        im_scores[0]['last']['imageID'] != imageInfo[0]['imageID']
             and 
-            im_scores['lastLast']['imageID'] == imageInfo['imageID'] 
-            ):
-
-            db.teams.update_one(
-                {
-                    'uid' : imageInfo['teamID'],
-                    'competition' : imageInfo['competitionName'],
-                    'images.name' : imageInfo['os']
-                }, {
-                    # set the image.warn tag properly
-                    '$push' : {
-                        'images.$.warn.multipleInstance' : {
-                            'start' : datetime.datetime.now(),
-                        }
-                    }
-                }
-            )
-            # THEY HAVE TWO IMAGES RUNNING
-        elif (# they have an active warning):
-
-            # end the warning
-            db.teams.update_one(
-                {
-                    'uid' : imageInfo['teamID'],
-                    'competition' : imageInfo['competitionName'],
-                    'images.name' : imageInfo['os']
-                }, {
-                    # set the image.warn tag properly
-                    '$push' : {
-                        'images.$.warn.multipleInstance' : {
-                            'end' : datetime.datetime.now()
-                        }
-                    }
-                }
-            )
-
+        im_scores[0]['lastLast']['imageID'] == imageInfo[0]['imageID'] )
 
     # update image info
     db.teams.update_one(
@@ -187,7 +151,11 @@ def handleImage(connection, connInfo):
                     'imageID' : imageInfo['imageID'],
                     'score' : imageInfo['score'],
                     'vulns' : imageInfo['vulnsFound'],
-                    'time' : imageInfo['timestamp']
+                    'time' : imageInfo['timestamp'],
+                    'warn' : {
+                        'multipleInstance' : multipleInstance,
+                        'timeExceeded' : (imageInfo['timestamp'] - im_scores['start']) > info['maxTime']
+                    }
                 }
             }
         }
@@ -271,20 +239,13 @@ if __name__ == '__main__':
 
 
 
-scores = list(
-    db.teams.aggregate([
-        {
-            '$match' : {
-                    'uid':'cleanXY', 
-                    'competition': 'PracticeRound'
-            }
-        },
-        { '$unwind': '$images'},
-        { '$match': {'images.name': 'WinblowsServer69R420'}},           
-        { '$project' : {
-                'lastLast' : { '$arrayElemAt' : [ "$images.scores", 0 ] },
-                'last' : { '$arrayElemAt' : [ "$images.scores", 0 ] }
-            }
-        }
-    ])
-)[0]
+
+# db.teams.find(
+#     {
+#         uid : 'cleanXY',
+#         competition : 'PracticeRound',
+#         'images.name' : 'WinblowsServer69R420'
+#     }, {
+#         warn : 1,
+#     }
+# )
