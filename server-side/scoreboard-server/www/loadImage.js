@@ -46,7 +46,6 @@ function update(){
                 canvas.fillText(name, canvasWidth - 30, 10 + 20 * i + canvasHeight / 4);
             }
             legendLength += 20;
-            graphY += legendLength;
             width -= legendLength;
             
             //Graph Section
