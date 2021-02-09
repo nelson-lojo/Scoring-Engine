@@ -60,7 +60,7 @@ function update(){
             //Image List
             var iList = document.getElementById("imageList");
             iList.innerHTML = "";
-            for(var i = 0; i < images.length; i++){
+            for(var i = 0; i < entry.images.length; i++){
                 var curr_img = entry.images[i];
                 var _tr = document.createElement("tr");
                 var _img_name = document.createElement("td");
