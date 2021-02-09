@@ -132,7 +132,9 @@ def handleImage(connection, connInfo):
         query = im_scores[0]
         print(f"returned query: {query}")
 
-        exists = bool(query['last']) and bool(query['lastLast'])
+        exists = bool(
+            query.get('last', None) and query.get('lastLast', None)
+        )
 
         multipleInstance = exists and ( 
             query['last']['imageID'] != imageInfo['imageID']
