@@ -44,6 +44,9 @@ function update(){
             var height = canvasHeight - heightOffset;
             entry = JSON.parse(this.responseText);
             
+            //Title
+            document.title = "Team " + entry.num + " Scoring Report";
+            
             //Team Info Summary
             var tbody = document.getElementById("teamInfoSummary");
             tbody.innerHTML = "";
@@ -66,7 +69,14 @@ function update(){
             passedTime /= 1000.0;
             _play_time.innerHTML = Math.floor(passedTime / 3600) + ":" + Math.floor((passedTime % 3600) / 60);
             _total_score.innerHTML = "" + entry.score;
-            _warnings.innerHTML = "TODO";
+            var warnMsg = "";
+            if(entry.warn.multipleInstance){
+                warnMsg += "M";
+            }
+            if(entry.warn.timeExceeded){
+                warnMsg += "T";
+            }
+            _warnings.innerHTML = warnMsg;
             tableRow.appendChild(_id);
             tableRow.appendChild(_div);
             tableRow.appendChild(_im_no);
@@ -100,7 +110,14 @@ function update(){
                 _img_remaining.innerHTML = "TODO";
                 _img_penalties.innerHTML = "TODO";
                 _img_score.innerHTML = "" + curr_img.score;
-                _img_warn.innerHTML = "TODO";
+                warnMsg = "";
+                if(curr_img.warn.multipleInstance){
+                    warnMsg += "M";
+                }
+                if(curr_img.warn.timeExceeded){
+                    warnMsg += "T";
+                }
+                _img_warn.innerHTML = warnMsg;
                 _tr.appendChild(_img_name);
                 _tr.appendChild(_img_time);
                 _tr.appendChild(_img_found);
