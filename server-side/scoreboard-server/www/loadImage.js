@@ -25,6 +25,36 @@ function update(){
             var width = canvasWidth - widthOffset;
             var height = canvasHeight - heightOffset;
             entry = JSON.parse(this.responseText);
+            //Team Info Summary
+            var tbody = document.getElementById("teamInfoSummary");
+            tbody.innerHTML = "";
+            var _id = document.createElement("td");
+            var _div = document.createElement("td");
+            var _im_no = document.createElement("td");
+            var _play_time = document.createElement("td");
+            var _total_score = document.createElement("td");
+            var _warnings = document.createElement("td");
+            _id.innerHTML = entry.num;
+            _div.innerHTML = entry.division;
+            _im_no.innerHTML = "" + entry.images.length;
+            var passedTime;
+            if(entry.hasOwnProperty("endTime")){
+                passedTime = new Date(entry.endTime) - new Date(entry.startTime);
+            }else{
+                passedTime = new Date() - new Date(entry.startTime);
+            }
+            passedTime /= 1000.0;
+            _play_time.innerHTML = Math.floor(passedTime / 3600) + ":" + passedTime % 3600;
+            _total_score.innerHTML = "" + entry.score;
+            _warnings.innerHTML = "TODO";
+            tbody.appendChild(_id);
+            tbody.appendChild(_div);
+            tbody.appendChild(_im_no);
+            tbody.appendChild(_play_time);
+            tbody.appendChild(_total_score);
+            tbody.appendChild(_warnings);
+            
+            
             var images = entry.images;
             canvas.clearRect(0, 0, canvasWidth, canvasHeight);
             
