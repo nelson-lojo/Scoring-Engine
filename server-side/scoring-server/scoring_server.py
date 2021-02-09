@@ -129,17 +129,18 @@ def handleImage(connection, connInfo):
     timeExceeded = False
 
     if len(im_scores):
-        print(f"returned query: {im_scores}")
+        query = im_scores[0]
+        print(f"returned query: {query}")
         
-        last = im_scores[0]['last']
-        lastLast = im_scores[0]['lastLast']
+        last = query['last']
+        lastLast = query['lastLast']
 
         multipleInstance = last and lastLast and ( 
             last['imageID'] != imageInfo['imageID']
                 and 
             lastLast['imageID'] == imageInfo['imageID'] 
         )
-        timeExceeded = (imageInfo['timestamp'] - im_scores['start']) > info['maxTime']
+        timeExceeded = (imageInfo['timestamp'] - query['start']) > info['maxTime']
 
     # update image info
     db.teams.update_one(
