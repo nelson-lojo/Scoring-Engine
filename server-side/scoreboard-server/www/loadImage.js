@@ -40,7 +40,10 @@ function update(){
                 canvas.fillRect(canvasWidth - 20, 20 * i + canvasHeight / 4, 10, 10);
                 canvas.font = "15px Arial";
                 canvas.textAlign = 'right';
-                legendLength = Math.max(legendLength, canvas.measureText(name));
+                var cms = canvas.measureText(name);
+                alert("cms: "+name+" "+cms)
+                if(cms > length)
+                    legendLength = cms;
                 canvas.fillText(name, canvasWidth - 30, 10 + 20 * i + canvasHeight / 4);
             }
             legendLength += 20;
