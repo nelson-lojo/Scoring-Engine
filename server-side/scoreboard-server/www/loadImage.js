@@ -25,6 +25,7 @@ function update(){
             var width = canvasWidth - widthOffset;
             var height = canvasHeight - heightOffset;
             entry = JSON.parse(this.responseText);
+            
             //Team Info Summary
             var tbody = document.getElementById("teamInfoSummary");
             tbody.innerHTML = "";
@@ -56,6 +57,43 @@ function update(){
             tableRow.appendChild(_warnings);
             tbody.appendChild(tableRow);
             
+            //Image List
+            var iList = document.getElementById("imageList");
+            iList.innerHTML = "";
+            for(var i = 0; i < images.length; i++){
+                var curr_img = entry.images[i];
+                var _tr = document.createElement("tr");
+                var _img_name = document.createElement("td");
+                var _img_time = document.createElement("td");
+                var _img_found = document.createElement("td");
+                var _img_remaining = document.createElement("td");
+                var _img_penalties = document.createElement("td");
+                var _img_score = document.createElement("td");
+                var _img_warn = document.createElement("td");
+                _img_name.innerHTML = curr_img.name;
+                if(curr_img.hasOwnProperty("endTime")){
+                    passedTime = new Date(curr_img.endTime) - new Date(curr_img.startTime);
+                }else{
+                    passedTime = new Date() - new Date(curr_img.startTime);
+                }
+                passedTime /= 1000.0;
+                _img_time.innerHTML = Math.floor(passedTime / 3600) + ":" + Math.floor((passedTime % 3600) / 60);
+                _img_found.innerHTML = curr_img.vulns;
+                _img_remaining.innerHTML = "TODO";
+                _img_penalties.innerHTML = "TODO";
+                _img_score.innerHTML = "" + curr_img.score;
+                _img_warn.innerHTML = "TODO";
+                _tr.appendChild(_img_name);
+                _tr.appendChild(_img_time);
+                _tr.appendChild(_img_found);
+                _tr.appendChild(_img_remaining);
+                _tr.appendChild(_img_penalties);
+                _tr.appendChild(_img_score);
+                _tr.appendChild(_img_warn);
+                iList.appendChild(_tr);
+            }
+            
+            //Setup
             
             var images = entry.images;
             canvas.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -64,6 +102,7 @@ function update(){
             var endTime = new Date(entry.endTime).getTime();
             
             var lineColors = ["#FF0000", "#E6E600", "#0000FF", "#00FF00", "#FF9900", "#FF00FF"];
+            
             //Legend
             var legendLength = 0;
             for(var i = 0; i < images.length; i++){
