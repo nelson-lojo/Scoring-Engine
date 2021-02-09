@@ -7,7 +7,7 @@
     margin-right: auto;
     margin-top: 15px;
     padding-bottom: 60px;
-    margin-bottom: 1000px;
+    margin-bottom: 100px;
 }
 
 #header {
@@ -143,6 +143,11 @@ p.description{
 
 #tables tr:nth-child(even) {
     background-color: rgb(173, 211, 248);
+}
+
+#transparent_padding {
+    visibility: hidden;
+    height: 100px;
 }
 
 
