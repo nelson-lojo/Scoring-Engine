@@ -53,7 +53,7 @@ function update(){
             canvas.lineWidth = 3;
             var lineColors = ["#FF0000", "#FFFF00", "#0000FF", "#00FF00", "#FF9900", "#FF00FF"];
             for(var i = 0; i < images.length; i++){
-                canvas.strokeStyle = lineColors[i % 3];
+                canvas.strokeStyle = lineColors[i % lineColors.length];
                 canvas.beginPath();
                 canvas.moveTo(0 + graphX, height + graphY);
                 for(var j = 0; j < images[i].scores.length; j++){
@@ -67,15 +67,17 @@ function update(){
                 
                 //Legend
                 var name = images[i].name;
+                canvas.fillStyle = lineColors[i % lineColors.length];
                 canvas.fillRect(canvasWidth - 20, 20 + i * 20, 10, 10);
                 canvas.font = "15px Arial";
                 canvas.textAlign = 'right';
-                canvas.fillText(name, canvasWidth - 30, 20 * i + 20);
+                canvas.fillText(name, canvasWidth - 30, 20 * i + 40);
             }
             
             //Labeling Section
             canvas.font = "15px Arial";
             canvas.textAlign = 'right';
+            canvas.fillStyle = "#000000";
             for(var i = 0; i <= maxScore / 10; i++){
                 canvas.fillText("" + i * 10, graphX - 10,  height - (10 * height / maxScore) * i + graphY - 1);
             }
