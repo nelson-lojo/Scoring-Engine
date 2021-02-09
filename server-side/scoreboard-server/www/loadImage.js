@@ -8,14 +8,14 @@ cFrame.style.border = "none";
 parentDiv.appendChild(cFrame);
 var canvas = cFrame.getContext("2d");
 var widthOffset = 35.0;
-var heightOffset = 20.0 + 80 + 80;
+var heightOffset = 20.0 + 80 ;
 var canvasWidth = cFrame.width;
 var canvasHeight = cFrame.height;
 var width = canvasWidth - widthOffset;
 var height = canvasHeight - heightOffset;
 
 var graphX = 35.0;
-var graphY = 20.0 + 80;
+var graphY = 20.0;
 
 function update(){
 
@@ -31,6 +31,24 @@ function update(){
             
             var startTime = new Date(entry.startTime).getTime();
             var endTime = new Date(entry.endTime).getTime();
+            
+            var lineColors = ["#FF0000", "#E6E600", "#0000FF", "#00FF00", "#FF9900", "#FF00FF"];
+            //Legend
+            var legendLength = 0;
+            for(var i = 0; i < images.length; i++){
+                //Legend
+                var name = images[i].name;
+                canvas.fillStyle = lineColors[i % lineColors.length];
+                canvas.fillRect(canvasWidth - 20, 20 * i + canvasHeight / 4, 10, 10);
+                canvas.font = "15px Arial";
+                canvas.textAlign = 'right';
+                legendLength = Math.max(legendLength, canvas.measureText(name));
+                canvas.fillText(name, canvasWidth - 30, 10 + 20 * i + canvasHeight / 4);
+            }
+            legendLength += 20;
+            graphY += legendLength;
+            width -= legendLength;
+            
             //Graph Section
             
             var maxScore = 0;
@@ -51,7 +69,6 @@ function update(){
                 canvas.stroke();
             }
             canvas.lineWidth = 3;
-            var lineColors = ["#FF0000", "#E6E600", "#0000FF", "#00FF00", "#FF9900", "#FF00FF"];
             for(var i = 0; i < images.length; i++){
                 canvas.strokeStyle = lineColors[i % lineColors.length];
                 canvas.beginPath();
@@ -64,14 +81,6 @@ function update(){
                     canvas.lineTo(mapWidth + graphX, mapHeight + graphY);
                 }
                 canvas.stroke();
-                
-                //Legend
-                var name = images[i].name;
-                canvas.fillStyle = lineColors[i % lineColors.length];
-                canvas.fillRect(canvasWidth - 20, 20 + i * 20, 10, 10);
-                canvas.font = "15px Arial";
-                canvas.textAlign = 'right';
-                canvas.fillText(name, canvasWidth - 30, 20 * i + 30);
             }
             
             //Labeling Section
