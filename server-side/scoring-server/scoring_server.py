@@ -180,7 +180,7 @@ def handleImage(connection, connInfo):
                 'competition' : info['competitionName']
             }, {
                 '$set' : {
-                    'score' : sum([img['score'] for img in images])
+                    'score' : sum([img['score'] for img in images]),
                     'warn' : {
                         'multipleInstance' : multipleInstance,
                         'timeExceeded' : False,
