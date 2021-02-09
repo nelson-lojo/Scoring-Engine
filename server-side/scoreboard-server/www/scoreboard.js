@@ -133,7 +133,7 @@ function loadTeams(amount) {
                 }
                 playtime = team.endTime.getTime() - team.startTime.getTime();  // make sure these are date objects #*
                 var row = document.createElement("TR");
-                row.setAttribute("href", "/team/"+team._id);
+                row.setAttribute("onClick", "location.href='/team/"+team._id+"'");
                 /*row.addEventListener('click', (event) => {
                     window.location="team/" + teamID;
                 }) */
