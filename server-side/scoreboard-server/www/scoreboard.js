@@ -132,9 +132,10 @@ function loadTeams(amount) {
                     team.endTime = new Date( Date.parse(team.endTime) );
                 }
                 playtime = team.endTime.getTime() - team.startTime.getTime();  // make sure these are date objects #* 
-                row = document.createElement("TR")
+                var row = document.createElement("TR");
+                var teamID = team._id;
                 row.addEventListener('click', (event) => {
-                    window.location="team/" + team._id
+                    window.location="team/" + teamID;
                 }) 
                 uid = document.createElement("TD");
                 uid.innerHTML = team.num;
