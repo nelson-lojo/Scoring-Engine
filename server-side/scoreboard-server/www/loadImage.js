@@ -11,7 +11,6 @@ var widthOffset = 35.0;
 var heightOffset = 20.0 + 80;
 var canvasWidth = cFrame.width;
 var canvasHeight = cFrame.height;
-//alert(canvasWidth+" "+canvasHeight);
 var width = canvasWidth - widthOffset;
 var height = canvasHeight - heightOffset;
 
@@ -52,13 +51,9 @@ function update(){
                 canvas.stroke();
             }
             canvas.lineWidth = 3;
+            var lineColors = ["#FF0000", "#FFFF00", "#0000FF", "#00FF00", "#FF9900", "#FF00FF"];
             for(var i = 0; i < images.length; i++){
-                if (i % 3 == 0)
-                    canvas.strokeStyle = "#FF0000";
-                else if (i % 3 == 1)
-                    canvas.strokeStyle = "#00FF00";
-                else
-                    canvas.strokeStyle = "#0000FF";
+                canvas.strokeStyle = lineColors[i % 3];
                 canvas.beginPath();
                 canvas.moveTo(0 + graphX, height + graphY);
                 for(var j = 0; j < images[i].scores.length; j++){
@@ -69,6 +64,13 @@ function update(){
                     canvas.lineTo(mapWidth + graphX, mapHeight + graphY);
                 }
                 canvas.stroke();
+                
+                //Legend
+                var name = images[i].name;
+                canvas.fillRect(canvasWidth - 20, 20 + i * 20, 10, 10);
+                canvas.font = "15px Arial";
+                canvas.textAlign = 'right';
+                canvas.fillText(name, canvasWidth - 30, 20 * i + 20);
             }
             
             //Labeling Section
