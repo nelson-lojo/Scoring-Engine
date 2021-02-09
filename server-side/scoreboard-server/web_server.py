@@ -82,7 +82,7 @@ def postTeams(loaded=0):
                     'startTime' : 1,
                     'endTime' : 1,
                     'score' : 1,
-                    'warnings' : 1 #* include warnings
+                    'warn' : 1 
                 }
             )
             .sort([("score", pymongo.DESCENDING)])
