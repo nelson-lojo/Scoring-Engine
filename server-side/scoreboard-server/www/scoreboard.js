@@ -153,7 +153,14 @@ function loadTeams(amount) {
                 score.innerHTML = team.score;
                 
                 warn = document.createElement("TD");
-                warn.innerHTML = "TODO";
+                var warnMsg = "";
+                if(team.warn.multipleInstance){
+                    warnMsg += "M";
+                }
+                if(team.warn.timeExceeded){
+                    warnMsg += "T";
+                }
+                warn.innerHTML = warnMsg;
                 
                 row.appendChild(uid);
                 row.appendChild(comp);
