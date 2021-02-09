@@ -44,7 +44,7 @@ function update(){
                 passedTime = new Date() - new Date(entry.startTime);
             }
             passedTime /= 1000.0;
-            _play_time.innerHTML = Math.floor(passedTime / 3600) + ":" + passedTime % 3600;
+            _play_time.innerHTML = Math.floor(passedTime / 3600) + ":" + Math.floor((passedTime % 3600) / 60);
             _total_score.innerHTML = "" + entry.score;
             _warnings.innerHTML = "TODO";
             tbody.appendChild(_id);
