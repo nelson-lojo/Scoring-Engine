@@ -5,7 +5,7 @@ var division = null;
 
 // send them to a team page #*
 
-// data for when a value for competition is entered 
+// data for when a value for competition is entered
 //     to update divisions dropdown
 var organization = {
     "Something went wrong. Refresh your browser." : ["Something went wrong. Refresh your browser."]
@@ -20,7 +20,7 @@ compFetch.onload = () => {
 compFetch.send(null);
 
 window.addEventListener('load', (event) => {
-    // toggle showing search for competitions 
+    // toggle showing search for competitions
     var compDropdown = document.getElementById("compDropdown");
     var compButton = document.getElementById("compButton");
     if (compDropdown && compButton) {
@@ -35,7 +35,7 @@ window.addEventListener('load', (event) => {
         compDropdown.style.display = 'none';
     }
 
-    // toggle showing search for divisions 
+    // toggle showing search for divisions
     var divDropdown = document.getElementById("divDropdown");
     var divButton = document.getElementById("divButton");
     if (divDropdown && divButton) {
@@ -62,6 +62,8 @@ window.addEventListener('load', (event) => {
     if (compDropdown) {
         compDropdown.addEventListener('input', (event) => {
             var input = compDropdown.getElementsByTagName('input')[0].value;
+            competition = input;
+            refreshTeams(FETCH_INCREMENT);
             if (input in organization) {
                 // update the choices in divisions search when competitions search has a valid choice
                 var list = organization[input];
@@ -86,6 +88,8 @@ window.addEventListener('load', (event) => {
             divDropdown.addEventListener('input', (event) => {
                 // refresh list of teams upon entry of a valid combination of competition and division
                 var comp = compDropdown.getElementsByTagName('input')[0].value;
+                division = divDropdown.getElementsByTagName('input')[0].value;
+                refreshTeams(FETCH_INCREMENT);
                 if ( (comp in organization) && (divDropdown.getElementsByTagName('input'[0]) in organization[comp]) ) {
                     refreshTeams(FETCH_INCREMENT);
                 }
@@ -123,7 +127,7 @@ function loadTeams(amount) {
     } else if (division == null) {
         fetch.open('POST', window.location.href + '/teams?competition=' + competition, true);
     } else {
-        fetch.open('POST', window.location.href + '/teams?competition=' + competition + '&division=' + division, true); 
+        fetch.open('POST', window.location.href + '/teams?competition=' + competition + '&division=' + division, true);
     }
     fetch.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     fetch.onload = (e) => {
