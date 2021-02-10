@@ -144,24 +144,3 @@ p.description{
 #tables tr:nth-child(even) {
     background-color: rgb(173, 211, 248);
 }
-
-#transparent_padding {
-    visibility: hidden;
-    height: 2em;
-}
-
-
-#credits {
-    background-color: rgb(0, 0, 255);
-    color: white;
-    width: 100%;
-    height: 2.5em;
-    position: fixed;
-    bottom: 0;
-}
-
-#credits * {
-    padding: 2.5px;
-    margin-top: 0;
-    
-}

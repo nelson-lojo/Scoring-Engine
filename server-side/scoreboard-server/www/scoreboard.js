@@ -19,16 +19,6 @@ compFetch.onload = () => {
 };
 compFetch.send(null);
 
-var scoreboardHeader = '<thead>' 
-    + '<th>Team ID</th>' 
-    + '<th>Competition</th>' 
-    + '<th>Division</th>' 
-    + '<th>Play Time</th>' 
-    + '<th>Score</th>' 
-    + '<th>Warning(s)</th>' 
-    + '</thead>';
-
-
 window.addEventListener('load', (event) => {
     // toggle showing search for competitions 
     var compDropdown = document.getElementById("compDropdown");
