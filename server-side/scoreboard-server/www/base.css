@@ -68,8 +68,8 @@ body{
 }
 
 #divDropdown {
-    right: 9em;
-    position: absolute;
+    left: 9em;
+    position: relative;
 }
 
 #divSearch {
