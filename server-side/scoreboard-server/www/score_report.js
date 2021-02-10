@@ -67,7 +67,11 @@ function update(){
                 passedTime = new Date() - new Date(entry.startTime);
             }
             passedTime /= 1000.0;
-            _play_time.innerHTML = Math.floor(passedTime / 3600) + ":" + Math.floor((passedTime % 3600) / 60);
+            var minute = Math.floor((passedTime % 3600) / 60);
+            if(minute < 10){
+                minute = "0" + minute;
+            }
+            _play_time.innerHTML = Math.floor(passedTime / 3600) + ":" + minute;
             _total_score.innerHTML = "" + entry.score;
             var warnMsg = "";
             if(entry.warn.multipleInstance){
@@ -105,7 +109,11 @@ function update(){
                     passedTime = new Date() - new Date(curr_img.startTime);
                 }
                 passedTime /= 1000.0;
-                _img_time.innerHTML = Math.floor(passedTime / 3600) + ":" + Math.floor((passedTime % 3600) / 60);
+                minute = Math.floor((passedTime % 3600) / 60);
+                if(minute < 10){
+                    minute = "0" + minute;
+                }
+                _img_time.innerHTML = Math.floor(passedTime / 3600) + ":" + minute;
                 _img_found.innerHTML = curr_img.vulns;
                 _img_remaining.innerHTML = "TODO";
                 _img_penalties.innerHTML = "TODO";
