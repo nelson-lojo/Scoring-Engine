@@ -127,7 +127,7 @@ function loadTeams(amount) {
     fetch.open('POST', uri, true);
     */
     if (competition == null && division == null) {
-        fetch.open('POST', , true);
+        fetch.open('POST', window.location.href + '/teams', true);
     } else if (competition == null) {
         fetch.open('POST', window.location.href + '/teams?division=' + division, true);
     } else if (division == null) {
