@@ -117,7 +117,7 @@ window.addEventListener('scroll', (event) => {
 
 function loadTeams(amount) {
     var fetch = new XMLHttpRequest();
-    var uri = window.location.href + '/teams?';
+    /*var uri = window.location.href + '/teams?';
     if (competition == null) {
         uri += '&competition=' + competition;
     }
@@ -125,7 +125,8 @@ function loadTeams(amount) {
         uri += '&division=' + division;
     }
     fetch.open('POST', uri, true);
-    /*if (competition == null && division == null) {
+    */
+    if (competition == null && division == null) {
         fetch.open('POST', , true);
     } else if (competition == null) {
         fetch.open('POST', window.location.href + '/teams?division=' + division, true);
@@ -133,7 +134,7 @@ function loadTeams(amount) {
         fetch.open('POST', window.location.href + '/teams?competition=' + competition, true);
     } else {
         fetch.open('POST', window.location.href + '/teams?competition=' + competition + '&division=' + division, true); 
-    }*/
+    }
     fetch.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     fetch.onload = (e) => {
         if(fetch.status == 200) {
