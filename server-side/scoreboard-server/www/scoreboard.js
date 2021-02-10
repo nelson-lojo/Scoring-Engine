@@ -1,5 +1,5 @@
 var fetchedTeams = 0;
-var FETCH_INCREMENT = 15; // temporarily lowered for testing, will be between 100 and 200
+var FETCH_INCREMENT = 150; // temporarily lowered for testing, will be between 100 and 200
 var competition = null;
 var division = null;
 
