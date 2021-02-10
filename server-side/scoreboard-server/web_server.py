@@ -62,8 +62,8 @@ def serveCompetitionsAndDivisions():
 # get all the teams in a competition and division as json
 @app.route('/teams', methods=['POST'])
 def postTeams(loaded=0):
-    comp = request.args.get('competition', None) or {'$regex': '.*'}
-    div = request.args.get('division', None) or {'$regex': '.*'}
+    comp = request.args.get('competition', False) or {'$regex': '.*'}
+    div = request.args.get('division', False) or {'$regex': '.*'}
     loaded = request.form.get('loaded')
     # print(loaded, ':', type(loaded))
     increment = request.form.get('increment')
