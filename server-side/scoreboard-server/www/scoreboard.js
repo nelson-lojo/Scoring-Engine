@@ -147,7 +147,11 @@ function loadTeams(amount) {
                 div.innerHTML = team.division;
 
                 playtyme = document.createElement("TD");
-                playtyme.innerHTML =  Math.floor(playtime / (1000 * 3600)) + ':' + Math.floor(playtime / (1000 * 60) % 60);
+                minute = Math.floor(playtime / (1000 * 60) % 60);
+                if(minute < 10){
+                    minute = "0" + minute;
+                }
+                playtyme.innerHTML =  Math.floor(playtime / (1000 * 3600)) + ':' + minute;
                 
                 score = document.createElement("TD");
                 score.innerHTML = team.score;
