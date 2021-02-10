@@ -55,8 +55,26 @@ body{
     width: 9em;
     padding-top: 0%;
     padding-bottom: 0%;
-    padding-right: 30px;
     float: left;
+}
+
+#compDropdown {
+    position: absolute;
+}
+
+#compSearch {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#divDropdown {
+    left: 9em;
+    position: absolute;
+}
+
+#divSearch {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #transparent_padding {
