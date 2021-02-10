@@ -117,7 +117,15 @@ window.addEventListener('scroll', (event) => {
 
 function loadTeams(amount) {
     var fetch = new XMLHttpRequest();
-    fetch.open('POST', window.location.href + '/teams?competition=' + competition + '&division=' + division, true); 
+    if (competition == null && division == null) {
+        fetch.open('POST', window.location.href + '/teams', true);
+    } else if (competition == null) {
+        fetch.open('POST', window.location.href + '/teams?division=' + division, true);
+    } else if (division == null) {
+        fetch.open('POST', window.location.href + '/teams?competition=' + competition, true);
+    } else {
+        fetch.open('POST', window.location.href + '/teams?competition=' + competition + '&division=' + division, true); 
+    }
     fetch.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     fetch.onload = (e) => {
         if(fetch.status == 200) {
@@ -125,13 +133,16 @@ function loadTeams(amount) {
             table = document.getElementsByTagName('tbody')[0];
             // build table with teams
             for (team of content) {
+                // calculate playtime for each team
                 team.startTime = new Date( Date.parse(team.startTime) );
                 if (!team.hasOwnProperty('endTime')) {
                     team.endTime = new Date();
                 } else {
                     team.endTime = new Date( Date.parse(team.endTime) );
                 }
-                playtime = team.endTime.getTime() - team.startTime.getTime();  // make sure these are date objects #*
+                playtime = team.endTime.getTime() - team.startTime.getTime();
+
+                // create a team's row
                 var row = document.createElement("TR");
                 row.setAttribute("onClick", "location.href='/team/"+team._id+"'");
                 /*row.addEventListener('click', (event) => {
