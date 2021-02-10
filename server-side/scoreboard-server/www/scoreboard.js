@@ -107,6 +107,15 @@ window.addEventListener('scroll', (event) => {
 
 function loadTeams(amount) {
     var fetch = new XMLHttpRequest();
+    /*var uri = window.location.href + '/teams?';
+    if (competition == null) {
+        uri += '&competition=' + competition;
+    }
+    if (division == null) {
+        uri += '&division=' + division;
+    }
+    fetch.open('POST', uri, true);
+    */
     if (competition == null && division == null) {
         fetch.open('POST', window.location.href + '/teams', true);
     } else if (competition == null) {
