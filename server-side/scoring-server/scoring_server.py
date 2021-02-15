@@ -3,7 +3,7 @@ from getpass import getpass
 from os import path
 import socket, pymongo, threading, datetime
 
-def log(category='MISC', message):
+def log(category='MISC', message=''):
     with open("scoring_server.log", "a+") as logFile:
         logFile.writelines(f"[{category}]: {message}")
 
