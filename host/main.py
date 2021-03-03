@@ -1,21 +1,22 @@
-import os, tkinter
+import os
 from socket import socket, AF_INET, SOCK_STREAM
 from json import loads
-from playsound import playsound
 from threading import Thread
-from Cryptodome.Cipher import AES
 from datetime import datetime
 from time import sleep
 from hashlib import sha512
+from playsound import playsound
+from Cryptodome.Cipher import AES
+import tkinter
 
 startingInfo = {
     'logo' : "MarvinLogo",
     'key' : b'Die-go is hella gay lmao', # must be 16, 24, or 32 chars
     'vulnNonce' : b'\xd0\x7b\x29\x9f\x37\xda\x79\x1c\x95\x91\x6a\xd9\x30\x7a\x1f\x13',     # change everytime the encryption is done again
     'penNonce' : b'\xa0\xd5\xc2\xf8\x11\xe0\x38\x67\x95\xa6\xec\xd4\x5c\x95\xe1\x37',      # change everytime the encryption is done again
-    'engineRoot' : 'ScoringEngine/',  # the path to the application's root from system root
-    'scoreboard' : ('ip/dns', int('port')),
-    'os' : 'GenericSystem18.04',     # cannot have spaces
+    'engineRoot' : 'home/jeremy/Documents/Scoring-Engine/host/',  # the path to the application's root from system root
+    'scoreboard' : ('18.224.165.244', int('6969')),
+    'os' : 'GenericSystem20.04',     # cannot have spaces
     'round' : "Practice Round"       # purely visual, but should also 
 }
 
@@ -131,7 +132,7 @@ class machine:
         # loading in vulns
         vulnFile = open(vulnPath, 'rb')
         vulnData = ( AES.new(startingInfo['key'], AES.MODE_EAX, nonce=startingInfo['vulnNonce']) 
-                        ).decrypt(vulnFile.readlines())
+                        ).decrypt(vulnFile.read())
         vulnFile.close()
         try:
             with loads(vulnData.decode("utf-8")) as vulns:
@@ -145,7 +146,7 @@ class machine:
         # loading in penalties
         penFile = open(penaltyPath, 'rb')
         penData = ( AES.new(startingInfo['key'], AES.MODE_EAX, nonce=startingInfo['penNonce']) 
-                    ).decrypt(penFile.readlines())
+                    ).decrypt(penFile.read())
         penFile.close()
         try:
             with loads(penData.decode("utf-8")) as penalties:
