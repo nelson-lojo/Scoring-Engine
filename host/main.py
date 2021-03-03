@@ -108,8 +108,8 @@ class machine:
         if not os.path.isfile(engineRoot + "image.dat"):
             persistentData = open( (engineRoot + "image.dat"), "w")
             try:
-                persistentData.write(str(datetime.utcnow().timestamp()))
-                persistentData.write(getTeamID())
+                persistentData.writelines(str(datetime.utcnow().timestamp()))
+                persistentData.writelines(getTeamID())
             except:
                 log("Could not write image image data to file")
             finally:
@@ -250,9 +250,10 @@ def uploadState(teamID, imID, vmOS, startTime, score, foundVulns):
     localSocket = socket(AF_INET, SOCK_STREAM)
     try:
         localSocket.connect(startingInfo['scoreboard'])
+
         msg = f"{teamID} {imID} {vmOS} {startTime} {score} {foundVulns}"
         print(f"sending message '{msg}' to {startingInfo['scoreboard'][0]}:{startingInfo['scoreboard'][1]}")
-        localSocket.send(msg)
+        localSocket.send(bytes(msg, "utf-8"))
         print(f"\tsent!")
         if not vm.connected:
             vm.connected = True
@@ -284,6 +285,7 @@ while True:
             if vm.check(penalty['test']):
                 scoredItems.AddPenalty(penalty['title'], penalty['value'])
     scoredItems.updateReport(vm)
+    # print(f"")
     uploadState(vm.teamID, vm.imageID, vm.imageSystem, vm.startTime,
         (scoredItems.Gain - scoredItems.Loss), len(scoredItems.Vulns))
     sleep(30)
