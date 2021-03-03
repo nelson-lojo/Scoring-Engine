@@ -220,7 +220,7 @@ class scoredItems:
         try:
             page = template.read()
             # input the information the engine knows
-            page = page.format( startTime=(state.startTime * 1000), 
+            page = page.format( startTime=(float(state.startTime) * 1000), 
                                 competition=state.round,
                                 imageType=state.imageSystem,
                                 timestamp=genTime,
