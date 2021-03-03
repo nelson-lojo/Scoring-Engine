@@ -174,6 +174,7 @@ class scoredItems:
     @staticmethod
     def AddVuln(title, value):
         scoredItems.Vulns.append({"title":title, "value":value})
+        print(f"append: vulns list now {scoredItems.Vulns}")
         scoredItems.Gain += value
         banner("You gained points!")
         play("pointGain.wav")
@@ -181,6 +182,7 @@ class scoredItems:
     @staticmethod
     def RemoveVuln(title, value):
         scoredItems.Vulns.remove({"title":title, "value":value})
+        print(f"remove: vulns list now {scoredItems.Vulns}")
         scoredItems.Gain -= value
         banner("You messed up ...")
         play("pointLoss.wav")
@@ -188,6 +190,7 @@ class scoredItems:
     @staticmethod
     def AddPenalty(title, value):
         scoredItems.Penalties.append({"title":title, "value":value})
+        print(f"append: pens list now {scoredItems.Penalties}")
         scoredItems.Loss += value
         banner("You messed up ...")
         play("pointLoss.wav")
@@ -195,6 +198,7 @@ class scoredItems:
     @staticmethod
     def RemovePenalty(title, value):
         scoredItems.Penalties.remove({"title":title, "value":value})
+        print(f"remove: pens list now {scoredItems.Penalties}")
         scoredItems.Loss -= value
         banner("You gained points!")
         play("pointGain.wav")
