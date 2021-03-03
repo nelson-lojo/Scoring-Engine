@@ -41,7 +41,8 @@ elif os.name=='posix':
             f"notify-send 'PolyCP Engine' '{message}' -i '{engineRoot + logo}'")
 
 def play(path):
-    Thread(target=playsound, args=(path, )).start()
+    soundThread = Thread(target=playsound, args=(path, ))
+    soundThread.start()
 
 def log(content, error=''):
     logFile = open(engineRoot + "log.txt", "a")
@@ -108,8 +109,8 @@ class machine:
         if not os.path.isfile(engineRoot + "image.dat"):
             persistentData = open( (engineRoot + "image.dat"), "w")
             try:
-                persistentData.writelines(str(datetime.utcnow().timestamp()))
-                persistentData.writelines(getTeamID())
+                persistentData.write(str(datetime.utcnow().timestamp()) + '\n')
+                persistentData.write(getTeamID() + '\n')
             except:
                 log("Could not write image image data to file")
             finally:
