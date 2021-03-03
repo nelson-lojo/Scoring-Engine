@@ -41,8 +41,7 @@ elif os.name=='posix':
             f"notify-send 'PolyCP Engine' '{message}' -i '{engineRoot + logo}'")
 
 def play(path):
-    Thread(target=playsound, args=())
-    playsound(path)
+    Thread(target=playsound, args=(path, )).start()
 
 def log(content, error=''):
     logFile = open(engineRoot + "log.txt", "a")
@@ -214,7 +213,7 @@ class scoredItems:
         # write what we got
         template = open("ScoreReportTemplate.html", 'r')
         try:
-            page = template.readlines()
+            page = template.read()
             # input the information the engine knows
             page = page.format( startTime=state.startTime, 
                                 competition=state.round,
@@ -251,7 +250,10 @@ def uploadState(teamID, imID, vmOS, startTime, score, foundVulns):
     localSocket = socket(AF_INET, SOCK_STREAM)
     try:
         localSocket.connect(startingInfo['scoreboard'])
-        localSocket.send(f"{teamID} {imID} {vmOS} {startTime} {score} {foundVulns}")
+        msg = f"{teamID} {imID} {vmOS} {startTime} {score} {foundVulns}"
+        print(f"sending message '{msg}' to {startingInfo['scoreboard'][0]}:{startingInfo['scoreboard'][1]}")
+        localSocket.send(msg)
+        print(f"\tsent!")
         if not vm.connected:
             vm.connected = True
     except:
@@ -282,7 +284,7 @@ while True:
             if vm.check(penalty['test']):
                 scoredItems.AddPenalty(penalty['title'], penalty['value'])
     scoredItems.updateReport(vm)
-    uploadState(vm.teamID, vm.imageID, vm.imageSystem, vm.startTime
+    uploadState(vm.teamID, vm.imageID, vm.imageSystem, vm.startTime,
         (scoredItems.Gain - scoredItems.Loss), len(scoredItems.Vulns))
     sleep(30)
 
