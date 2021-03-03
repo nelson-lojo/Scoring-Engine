@@ -117,8 +117,8 @@ class machine:
                 persistentData.close()
         persistentData = open( (engineRoot + "image.dat"), "r")
         try:
-            self.startTime = persistentData.readline()
-            self.teamID = persistentData.readline()
+            self.startTime = persistentData.readline().replace('\n', '')
+            self.teamID = persistentData.readline().replace('\n', '')
         except:
             log("Could not read image data.")
         finally:
