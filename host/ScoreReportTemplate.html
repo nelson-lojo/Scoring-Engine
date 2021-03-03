@@ -31,11 +31,11 @@
                 var now = new Date().getTime();
                 var hours = Math.floor((now - imageStartTime) / (1000 * 60 * 60)) 
                 var mins = Math.floor((now - imageStartTime) % (1000 * 60 * 60) / (1000 * 60))
-                if (mins < 10) {
+                if (mins < 10) {{
                     document.getElementById("imageTimer").innerHTML = hours + ":0" + mins
-                } else {
+                }} else {{
                     document.getElementById("imageTimer").innerHTML = hours + ":" + mins 
-                }
+                }}
             }}, 1000)
         </script>
     </head>
