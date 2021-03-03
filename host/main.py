@@ -172,34 +172,34 @@ class scoredItems:
     Loss = 0
 
     @staticmethod
-    def AddVuln(title, value):
-        scoredItems.Vulns.append({"title":title, "value":value})
+    def AddVuln(vuln):
+        scoredItems.Vulns.append(vuln)
         print(f"append: vulns list now {scoredItems.Vulns}")
-        scoredItems.Gain += value
+        scoredItems.Gain += vuln['value']
         banner("You gained points!")
         play("pointGain.wav")
     
     @staticmethod
-    def RemoveVuln(title, value):
-        scoredItems.Vulns.remove({"title":title, "value":value})
+    def RemoveVuln(vuln):
+        scoredItems.Vulns.remove(vuln)
         print(f"remove: vulns list now {scoredItems.Vulns}")
-        scoredItems.Gain -= value
+        scoredItems.Gain -= vuln['value']
         banner("You messed up ...")
         play("pointLoss.wav")
     
     @staticmethod
-    def AddPenalty(title, value):
-        scoredItems.Penalties.append({"title":title, "value":value})
+    def AddPenalty(pen):
+        scoredItems.Penalties.append(pen)
         print(f"append: pens list now {scoredItems.Penalties}")
-        scoredItems.Loss += value
+        scoredItems.Loss += pen['value']
         banner("You messed up ...")
         play("pointLoss.wav")
     
     @staticmethod
-    def RemovePenalty(title, value):
-        scoredItems.Penalties.remove({"title":title, "value":value})
+    def RemovePenalty(pen):
+        scoredItems.Penalties.remove(pen)
         print(f"remove: pens list now {scoredItems.Penalties}")
-        scoredItems.Loss -= value
+        scoredItems.Loss -= pen['value']
         banner("You gained points!")
         play("pointGain.wav")
 
@@ -271,24 +271,26 @@ def uploadState(teamID, imID, vmOS, startTime, score, foundVulns):
 
 while True:
     for vuln in vm.Vulns:
-        if vuln in scoredItems.Vulns:
+        vul = { "title": vuln['title'], "value": vuln['value'] }
+        if vul in scoredItems.Vulns:
             # already solved case
             if not vm.check(vuln['test']):
-                # remove the vuln if no longer true
-                scoredItems.RemoveVuln(vuln['title'], vuln['value'])
+                # remove the vul if no longer true
+                scoredItems.RemoveVuln(vul)
         else:
             # not-yet-solved case
             if vm.check(vuln['test']):
                 # add the vuln if they solved it
-                scoredItems.AddVuln(vuln['title'], vuln['value'])
+                scoredItems.AddVuln(vul)
     # again for penalties
     for penalty in vm.Penalties:
-        if penalty in scoredItems.Penalties:
+        pen = { "title": penalty['title'], "value": penalty['value'] }
+        if pen in scoredItems.Penalties:
             if not vm.check(penalty['test']):
-                scoredItems.RemovePenalty(penalty['title'], penalty['value'])
+                scoredItems.RemovePenalty(pen)
         else:
             if vm.check(penalty['test']):
-                scoredItems.AddPenalty(penalty['title'], penalty['value'])
+                scoredItems.AddPenalty(pen)
     scoredItems.updateReport(vm)
     # print(f"")
     uploadState(vm.teamID, vm.imageID, vm.imageSystem, vm.startTime,
