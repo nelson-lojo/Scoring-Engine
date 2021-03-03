@@ -1,6 +1,8 @@
 import os, tkinter
 from socket import socket, AF_INET, SOCK_STREAM
 from json import loads
+from playsound import playsound
+from threading import Thread
 from Cryptodome.Cipher import AES
 from datetime import datetime
 from time import sleep
@@ -9,9 +11,9 @@ from hashlib import sha512
 startingInfo = {
     'logo' : "MarvinLogo",
     'key' : b'Die-go is hella gay lmao', # must be 16, 24, or 32 chars
-    'vulnNonce' : None,     # change everytime the encryption is done again
-    'penNonce' : None,      # change everytime the encryption is done again
-    'engineRoot' : 'ScoringEngine/',
+    'vulnNonce' : b'\xd0\x7b\x29\x9f\x37\xda\x79\x1c\x95\x91\x6a\xd9\x30\x7a\x1f\x13',     # change everytime the encryption is done again
+    'penNonce' : b'\xa0\xd5\xc2\xf8\x11\xe0\x38\x67\x95\xa6\xec\xd4\x5c\x95\xe1\x37',      # change everytime the encryption is done again
+    'engineRoot' : 'ScoringEngine/',  # the path to the application's root from system root
     'scoreboard' : ('ip/dns', int('port')),
     'os' : 'GenericSystem18.04',     # cannot have spaces
     'round' : "Practice Round"       # purely visual, but should also 
@@ -22,27 +24,23 @@ engineRoot = startingInfo['engineRoot']
 
 if os.name=='nt':
     from win10toast import ToastNotifier
-    import winsound
     engineRoot = f"C:/{engineRoot}"
     logo += '.ico'
-
-    def play(path):
-        winsound.PlaySound(path, winsound.SND_ALIAS)
 
     def banner(message):
         (ToastNotifier()).show_toast(
             "PolyCP Engine", message, icon_path=(engineRoot + logo))
 elif os.name=='posix':
-    os.system("sudo apt install -y sox")
     engineRoot = f"/{engineRoot}"
     logo += '.png'
-
-    def play(path):
-        os.system(f"play {engineRoot + path}")
 
     def banner(message):
         os.system(
             f"notify-send 'PolyCP Engine' '{message}' -i '{engineRoot + logo}'")
+
+def play(path):
+    Thread(target=playsound, args=())
+    playsound(path)
 
 def log(content, error=''):
     logFile = open(engineRoot + "log.txt", "a")

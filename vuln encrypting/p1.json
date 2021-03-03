@@ -1,0 +1,18 @@
+[
+    {
+        "test" : [
+            "[ -f /root/Desktop/bruh ] && echo 959",
+            "959"
+        ],
+        "title" : "b r u h",
+        "value" : 69420
+    },
+    {
+        "test" : [
+            "echo oof",
+            "oof"
+        ],
+        "title" : "echo works ... ik i'm not creative, leave me alone",
+        "value" : 1
+    }
+]

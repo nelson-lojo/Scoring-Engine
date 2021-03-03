@@ -5,7 +5,7 @@
    "value": 10
  },
  {
-   "test": ["powershell -c \''\", ""],
+   "test": ["powershell -c ''", ""],
    "title": "",
    "value": 10
  },

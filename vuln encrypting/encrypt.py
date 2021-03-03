@@ -1,9 +1,14 @@
 from Cryptodome.Cipher import AES
 import sys
 
+print(len(sys.argv))
+assert len(sys.argv) > 3, "args are as follows: encrypt <key> <vulnsFile> <pensFile>"
 key = (sys.argv[1]).encode("utf-8")
 vulnPath = sys.argv[2]
 penPath = sys.argv[3]
+
+def showBytes(byts):
+    return 'b\'\\x' + '\\x'.join([ byts.hex()[i:i+2] for i in range(0, len(byts.hex()), 2) ]) + '\''
 
 # grab the binary of the vulns json file and put it in vulnJsonBin
 vulnJson = open(vulnPath, "rb")
@@ -40,12 +45,12 @@ del(encryptedPenBinary)
 
 # now print the tags and nonces for later
 print(f"""
-vuln nonce: {vulnNonce}
-vuln tag:   {vulnTag}
+vuln nonce: {showBytes(vulnNonce)}
+vuln tag:   {showBytes(vulnTag)}
 encrypted vuln file: `vulns`
 
-penalty nonce: {penNonce}
-penalty tag:   {penTag}
+penalty nonce: {showBytes(penNonce)}
+penalty tag:   {showBytes(penTag)}
 encrypted penalty file: `penalties`""")
 
 
