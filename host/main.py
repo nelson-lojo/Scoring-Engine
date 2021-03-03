@@ -138,7 +138,7 @@ class machine:
         try:
             vulns = loads(vulnData.decode("utf-8"))
             for vuln in vulns:
-                self.Vulns += vuln
+                self.Vulns.append(vuln)
                 self.maxScore += vuln["value"]
             del vulns
         except: 
@@ -150,14 +150,14 @@ class machine:
         penData = ( AES.new(startingInfo['key'], AES.MODE_EAX, nonce=startingInfo['penNonce']) 
                     ).decrypt(penFile.read())
         penFile.close()
-        # try:
-        penalties = loads(penData.decode("utf-8"))
-        for penalty in penalties:
-            self.Penalties += penalty
-        del penalties
-        # except: 
-        #     log("Penalty data is not in JSON format")
-        #     exit()
+        try:
+            penalties = loads(penData.decode("utf-8"))
+            for penalty in penalties:
+                self.Penalties.append(penalty)
+            del penalties
+        except: 
+            log("Penalty data is not in JSON format")
+            exit()
 
     def check(self, test):
         return f"{test[1]}\n" == os.popen(test[0]).read()
