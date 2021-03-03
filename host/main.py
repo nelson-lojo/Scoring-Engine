@@ -173,7 +173,7 @@ class scoredItems:
 
     @staticmethod
     def AddVuln(title, value):
-        scoredItems.Vulns += {"title":title, "value":value}
+        scoredItems.Vulns.append({"title":title, "value":value})
         scoredItems.Gain += value
         banner("You gained points!")
         play("pointGain.wav")
@@ -187,7 +187,7 @@ class scoredItems:
     
     @staticmethod
     def AddPenalty(title, value):
-        scoredItems.Penalties += {"title":title, "value":value}
+        scoredItems.Penalties.append({"title":title, "value":value})
         scoredItems.Loss += value
         banner("You messed up ...")
         play("pointLoss.wav")
