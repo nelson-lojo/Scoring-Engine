@@ -247,7 +247,7 @@ class scoredItems:
         finally:
             template.close()
 
-def upload(teamID, imID, vmOS, startTime, score, foundVulns):
+def uploadState(teamID, imID, vmOS, startTime, score, foundVulns):
     localSocket = socket(AF_INET, SOCK_STREAM)
     try:
         localSocket.connect(startingInfo['scoreboard'])
@@ -281,9 +281,9 @@ while True:
         else:
             if vm.check(penalty['test']):
                 scoredItems.AddPenalty(penalty['title'], penalty['value'])
-    upload(vm.teamID, vm.imageID, vm.imageSystem, vm.startTime
-        (scoredItems.Gain - scoredItems.Loss), len(scoredItems.Vulns))
     scoredItems.updateReport(vm)
+    uploadState(vm.teamID, vm.imageID, vm.imageSystem, vm.startTime
+        (scoredItems.Gain - scoredItems.Loss), len(scoredItems.Vulns))
     sleep(30)
 
 #####
