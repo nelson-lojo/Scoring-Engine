@@ -7,13 +7,24 @@
 
 
 ## Todo list
+- Prepare repository for compilation in GraalVM
 - Scoreboard 
-    - Complete interface
-    - Implement data transfer between web client and score-keeping db
+    - Implement search for competitions and divisions 
 - Setup UI
     - Create GUI for initializing server-side components
+        - create data.py
+        - install mongod
+        - compile main python files into native binary
     - Create vuln and penalty file UI
+        - UI needs to abstractify command writing to allow clients with no CLI experience to create images
+        - use Java + GraalVM 
     - Add ability to automatically create initialized VMs
+- Write the user manual (this readme)
+    - make About pretty
+    - expand Features
+        - and make it pretty
+    - write the Setup section to guide installation
+        - on both server side and image initialization
 
 
 ## About
@@ -24,3 +35,5 @@ This is an imitation of the Cyberpatriot Scoring Engine and intended to enable s
 - Uses MongoDB to store team information
 - Stores vulnerability and penalty info as AES Encrypted JSON in competitor images to improve performance and allow unlimited customization
 - Supports multiple concurrent competitions, each split by divisions
+
+## Setup
