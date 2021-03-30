@@ -115,8 +115,8 @@ function update(){
                 }
                 _img_time.innerHTML = Math.floor(passedTime / 3600) + ":" + minute;
                 _img_found.innerHTML = curr_img.vulns;
-                _img_remaining.innerHTML = "TODO";
-                _img_penalties.innerHTML = "TODO";
+                _img_remaining.innerHTML = curr_img.maxVulns - curr_img.vulns;
+                _img_penalties.innerHTML = curr_img.pens;
                 _img_score.innerHTML = "" + curr_img.score;
                 warnMsg = "";
                 if(curr_img.warn.multipleInstance){
