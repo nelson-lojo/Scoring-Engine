@@ -36,7 +36,7 @@ def handleImage(connection, connInfo):
         'imageID' : str(imageInfo[1]),
         'os' : str(imageInfo[2]),
         'startTime' : 
-            datetime.datetime.utcfromtimestamp( 
+            datetime.datetime.fromtimestamp( 
                 float(imageInfo[3])
             ), # produces datetime.datetime object 
         'score' : int(imageInfo[4]),
