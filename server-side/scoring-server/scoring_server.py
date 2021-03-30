@@ -45,6 +45,11 @@ def handleImage(connection, connInfo):
     }
     print(f"Received packet from image {imageInfo['imageID']}")
     print(f"Recieved \t{msg}")
+    print()
+    print()
+    print(f"given time: {repr(imageInfo['startTime'])}")
+    print()
+    print()
     now = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
     if imageInfo['startTime'] - now > info['timingTolerance']:
         print(f"Start time for image {imageInfo['imageID']} was spoofed to be {imageInfo['startTime']} at {now}, exceeding the tolerance of {info['timingTolerance']}")
