@@ -307,7 +307,8 @@ while True:
     scoredItems.updateReport(vm)
     # print(f"")
     uploadState(vm.teamID, vm.imageID, vm.imageSystem, vm.startTime,
-        (scoredItems.Gain - scoredItems.Loss), len(scoredItems.Vulns))
+        (scoredItems.Gain - scoredItems.Loss), len(scoredItems.Vulns),
+        len(vm.Vulns), len(scoredItems.Penalties))
     sleep(30)
 
 #####
