@@ -257,9 +257,11 @@ class scoredItems:
             template.close()
 
 def uploadState(teamID, imID, vmOS, startTime, score, foundVulns, maxVulns, foundPens):
+    print(f"\tcalled!")
     localSocket = socket(AF_INET, SOCK_STREAM)
     try:
         localSocket.connect(startingInfo['scoring'])
+        print(f"constructing json")
         msg = json.dumps({
             'teamID' : teamID,
             'imageID' : imID,
@@ -270,6 +272,7 @@ def uploadState(teamID, imID, vmOS, startTime, score, foundVulns, maxVulns, foun
             'maxVulns' : maxVulns,
             'foundPens' : foundPens 
         })
+        print(f"\tconstructed")
         print(f"sending message '{msg}' to {startingInfo['scoring'][0]}:{startingInfo['scoring'][1]}")
         localSocket.send(bytes(msg, "utf-8"))
         print(f"\tsent!")
@@ -305,7 +308,7 @@ while True:
             if vm.check(penalty['test']):
                 scoredItems.AddPenalty(pen)
     scoredItems.updateReport(vm)
-    # print(f"")
+    print(f"Calling upload function")
     uploadState(vm.teamID, vm.imageID, vm.imageSystem, vm.startTime,
         (scoredItems.Gain - scoredItems.Loss), len(scoredItems.Vulns),
         len(vm.Vulns), len(scoredItems.Penalties))
