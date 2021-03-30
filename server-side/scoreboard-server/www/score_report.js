@@ -174,10 +174,14 @@ function update(){
                 }
             }
             maxScore = Math.max(40, Math.ceil(maxScore / 10) * 10);
+            var scoreScale = 10;
+            while(maxScore / scoreScale >= 50){
+                scoreScale *= 10;
+            }
             canvas.strokeStyle = "#b5b5b5";
-            for(var i = 0; i <= maxScore / 10; i++){
+            for(var i = 0; i <= maxScore / scoreScale; i++){
                 canvas.beginPath();
-                var drawHeight = height - (10 * height / maxScore) * i;
+                var drawHeight = height - (scoreScale * height / maxScore) * i;
                 canvas.moveTo(0 + graphX, drawHeight + graphY);
                 canvas.lineTo(width + graphX, drawHeight + graphY);
                 canvas.stroke();
@@ -201,8 +205,8 @@ function update(){
             canvas.font = "15px Arial";
             canvas.textAlign = 'right';
             canvas.fillStyle = "#000000";
-            for(var i = 0; i <= maxScore / 10; i++){
-                canvas.fillText("" + i * 10, graphX - 10,  height - (10 * height / maxScore) * i + graphY - 1);
+            for(var i = 0; i <= maxScore / scoreScale; i++){
+                canvas.fillText("" + i * scoreScale, graphX - 10,  height - (scoreScale * height / maxScore) * i + graphY - 1);
             }
             var labelAmount = 10;
             for(var i = 1; i <= labelAmount; i++){
