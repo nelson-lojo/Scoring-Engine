@@ -257,23 +257,19 @@ class scoredItems:
             template.close()
 
 def uploadState(teamID, imID, vmOS, startTime, score, foundVulns, maxVulns, foundPens):
-    print(f"\tcalled!")
-    print(f"constructing json")
-    msg = dumps({
-        'teamID' : teamID,
-        'imageID' : imID,
-        'os' : vmOS,
-        'startTime' : startTime,
-        'score' : score,
-        'vulnsFound' : foundVulns,
-        'maxVulns' : maxVulns,
-        'foundPens' : foundPens 
-    })
-    print(f"\tconstructed")
     localSocket = socket(AF_INET, SOCK_STREAM)
     try:
         localSocket.connect(startingInfo['scoring'])
-        
+        msg = dumps({
+            'teamID' : teamID,
+            'imageID' : imID,
+            'os' : vmOS,
+            'startTime' : startTime,
+            'score' : score,
+            'vulnsFound' : foundVulns,
+            'maxVulns' : maxVulns,
+            'foundPens' : foundPens 
+        })
         print(f"sending message '{msg}' to {startingInfo['scoring'][0]}:{startingInfo['scoring'][1]}")
         localSocket.send(bytes(msg, "utf-8"))
         print(f"\tsent!")

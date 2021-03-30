@@ -33,7 +33,7 @@ def handleImage(connection, connInfo):
 
     imageInfo = loads(msg)
     imageInfo.update({
-        'division' : getDivision(str(imageInfo[0])),
+        'division' : getDivision(str(imageInfo['teamID'])),
         'startTime' : 
             datetime.datetime.fromtimestamp( 
                 imageInfo['startTime']
