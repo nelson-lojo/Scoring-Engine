@@ -47,7 +47,7 @@ def handleImage(connection, connInfo):
     print(f"Received packet from image {imageInfo['imageID']}")
     # print(f"Recieved \t {msg}")
     
-    divisionID = (filter(lambda ID: imageInfo['division'] in ID, divisions.items()))[0]
+    divisionID = list(filter(lambda ID: imageInfo['division'] in ID, divisions.items()))[0]
     
     if imageInfo['startTime'] - (time:= datetime.datetime.now()) > info['timingTolerance']:
         print(f"Start time for image {imageInfo['imageID']} was spoofed to be {imageInfo['startTime']} at {datetime.datetime.now()}, exceeding the tolerance of {info['timingTolerance']}")
