@@ -1,6 +1,5 @@
 from Cryptodome.Cipher import AES
 
-
 def encrypt(key, vulns, pens, length=2, vulnOut="vulns", penOut="penalties"):
     assert key != "", "Key cannot be an empty string"
     assert length*8 in [16, 24, 32], "Key lengths have to be either 2, 3, 4"

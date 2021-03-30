@@ -1,0 +1,21 @@
+{% extends "index.html" %}
+
+{% block imports %}
+<script src="/inspect.js"></script>
+<link href="/inspect.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<table id="listing">
+    <thead>
+        <th>Message</th>
+        <th>Points</th>
+        <th>Condition</th>
+    </thead>
+    <!-- Fill the rows using JS -->
+</table>
+<div id="plusMinus">
+    <button id="plus"></button>
+    <button id="minus"></button>
+</div>
+{% endblock %}
