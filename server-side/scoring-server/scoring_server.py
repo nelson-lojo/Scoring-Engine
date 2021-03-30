@@ -29,6 +29,7 @@ def dbConnect(connInfo):
 
 def handleImage(connection, connInfo):
     msg = connection.recv(1024).decode("utf-8")
+    ip, port = connection.getpeername()
     connection.close()
 
     imageInfo = loads(msg)
@@ -47,8 +48,14 @@ def handleImage(connection, connInfo):
     print(f"Received packet from image {imageInfo['imageID']}")
     # print(f"Recieved \t {msg}")
     
-    divisionID = list(filter(lambda ID: imageInfo['division'] in ID, divisions.items()))[0]
-    
+    divisionIDs = list(filter(lambda ID: imageInfo['division'] in ID, divisions.keys()))
+
+    if len(divisionIDs) < 1:
+        print(f"IP {ip}:{port} has a wrong team ID: {imageInfo['teamID']}")
+        return
+
+    divisionID = divisionIDs[0]
+
     if imageInfo['startTime'] - (time:= datetime.datetime.now()) > info['timingTolerance']:
         print(f"Start time for image {imageInfo['imageID']} was spoofed to be {imageInfo['startTime']} at {datetime.datetime.now()}, exceeding the tolerance of {info['timingTolerance']}")
         return 
@@ -207,8 +214,7 @@ def handleImage(connection, connInfo):
                 }
             }
         )
-    else:
-        pass
+
 
     conn.close()
 
