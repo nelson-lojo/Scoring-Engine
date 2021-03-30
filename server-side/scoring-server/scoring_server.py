@@ -38,21 +38,15 @@ def handleImage(connection, connInfo):
         'startTime' : 
             datetime.datetime.fromtimestamp( 
                 float(imageInfo[3])
-            ).replace(tzinfo=datetime.timezone.utc), # produces datetime.datetime object in utc
+            ), # produces datetime.datetime object 
         'score' : int(imageInfo[4]),
         'vulnsFound' : int(imageInfo[5]),
         'timestamp' : datetime.datetime.utcnow()#.timestamp()
     }
     print(f"Received packet from image {imageInfo['imageID']}")
-    print(f"Recieved \t{msg}")
-    print()
-    print()
-    print(f"given time: {repr(imageInfo['startTime'])}")
-    print()
-    print()
-    now = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
-    if imageInfo['startTime'] - now > info['timingTolerance']:
-        print(f"Start time for image {imageInfo['imageID']} was spoofed to be {imageInfo['startTime']} at {now}, exceeding the tolerance of {info['timingTolerance']}")
+    print(f"Recieved \t {msg}")
+    if imageInfo['startTime'] - (time:= datetime.datetime.now()) > info['timingTolerance']:
+        print(f"Start time for image {imageInfo['imageID']} was spoofed to be {imageInfo['startTime']} at {datetime.datetime.now()}, exceeding the tolerance of {info['timingTolerance']}")
         return 
 
     # create a new client for each image connection
