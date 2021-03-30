@@ -38,7 +38,7 @@ def handleImage(connection, connInfo):
         'startTime' : 
             datetime.datetime.fromtimestamp( 
                 float(imageInfo[3])
-            ), # produces datetime.datetime object 
+            ).replace(tzinfo=datetime.timezone.utc), # produces datetime.datetime object in utc
         'score' : int(imageInfo[4]),
         'vulnsFound' : int(imageInfo[5]),
         'timestamp' : datetime.datetime.utcnow()#.timestamp()
