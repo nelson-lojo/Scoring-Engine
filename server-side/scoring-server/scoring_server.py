@@ -27,10 +27,10 @@ def dbConnect(connInfo):
     return conn
 
 def handleImage(connection, connInfo):
-    imageInfo = connection.recv(512).decode("utf-8")
+    msg = connection.recv(512).decode("utf-8")
     connection.close()
 
-    imageInfo = imageInfo.split()
+    imageInfo = msg.split()
     imageInfo = {
         'teamID' : str(imageInfo[0]),
         'imageID' : str(imageInfo[1]),
@@ -44,6 +44,7 @@ def handleImage(connection, connInfo):
         'timestamp' : datetime.datetime.utcnow()#.timestamp()
     }
     print(f"Received packet from image {imageInfo['imageID']}")
+    print(f"Recieved \t{msg}")
     if imageInfo['startTime'] - (time:= datetime.datetime.now()) > info['timingTolerance']:
         print(f"Start time for image {imageInfo['imageID']} was spoofed to be {imageInfo['startTime']} at {datetime.datetime.now()}, exceeding the tolerance of {info['timingTolerance']}")
         return 
