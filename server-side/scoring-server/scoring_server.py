@@ -33,6 +33,7 @@ def handleImage(connection, connInfo):
     imageInfo = msg.split()
     imageInfo = {
         'teamID' : str(imageInfo[0]),
+        'division' : getDivision(str(imageInfo[0]))
         'imageID' : str(imageInfo[1]),
         'os' : str(imageInfo[2]),
         'startTime' : 
@@ -44,10 +45,16 @@ def handleImage(connection, connInfo):
         'timestamp' : datetime.datetime.utcnow()#.timestamp()
     }
     print(f"Received packet from image {imageInfo['imageID']}")
-    print(f"Recieved \t {msg}")
+    # print(f"Recieved \t {msg}")
+    
+    divisionID = (filter(lambda ID: imageInfo['division'] in ID, divisions.items()))[0]
+    
     if imageInfo['startTime'] - (time:= datetime.datetime.now()) > info['timingTolerance']:
         print(f"Start time for image {imageInfo['imageID']} was spoofed to be {imageInfo['startTime']} at {datetime.datetime.now()}, exceeding the tolerance of {info['timingTolerance']}")
         return 
+    elif imageInfo['os'] not in divisions[divisionID]:
+        print(f"Team {imageInfo['teamID']} has an invalid image running {imageInfo['os']}")
+        return
 
     # create a new client for each image connection
     conn = dbConnect(dbInfo)
@@ -63,7 +70,7 @@ def handleImage(connection, connInfo):
                 'uid' : imageInfo['teamID'],
                 'competition' : info['competitionName'],
                 'num' : imageInfo['teamID'][:4],
-                'division' : getDivision(imageInfo['teamID']),
+                'division' : imageInfo['division'],
                 'endTime' : imageInfo['timestamp'],
                 'score' : 0,
                 'warn' : {
@@ -135,7 +142,7 @@ def handleImage(connection, connInfo):
 
     if len(im_scores):
         query = im_scores[0]
-        print(f"returned query: {query}")
+        # print(f"returned query: {query}")
 
         exists = bool(
             query.get('last', None) and query.get('lastLast', None)
