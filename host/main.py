@@ -259,7 +259,7 @@ class scoredItems:
 def uploadState(teamID, imID, vmOS, startTime, score, foundVulns, maxVulns, foundPens):
     print(f"\tcalled!")
     print(f"constructing json")
-    msg = json.dumps({
+    msg = dumps({
         'teamID' : teamID,
         'imageID' : imID,
         'os' : vmOS,
