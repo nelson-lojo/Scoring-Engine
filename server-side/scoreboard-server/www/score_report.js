@@ -202,11 +202,11 @@ function update(){
             }
             
             //Labeling Section
-            canvas.font = "15px Arial";
+            canvas.font = "14px Arial";
             canvas.textAlign = 'right';
             canvas.fillStyle = "#000000";
             for(var i = 0; i <= maxScore / scoreScale; i++){
-                canvas.fillText("" + i * scoreScale, graphX - 10,  height - (scoreScale * height / maxScore) * i + graphY - 1);
+                canvas.fillText("" + i * scoreScale, graphX - 8,  height - (scoreScale * height / maxScore) * i + graphY - 1);
             }
             var labelAmount = 10;
             for(var i = 1; i <= labelAmount; i++){
