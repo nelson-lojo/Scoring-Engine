@@ -7,6 +7,17 @@ key = (sys.argv[1]).encode("utf-8")
 vulnPath = sys.argv[2]
 penPath = sys.argv[3]
 
+if len(sys.argv) > 4:
+    keyLen = int(sys.argv[4])
+else:
+    keyLen = 16
+
+assert key != "", "Key cannot be an empty string"
+assert keyLen in [16, 24, 32], "Key lengths have to be either 16, 24, 36"
+
+key *= keyLen
+key = key[:keyLen]
+
 def showBytes(byts):
     return 'b\'\\x' + '\\x'.join([ byts.hex()[i:i+2] for i in range(0, len(byts.hex()), 2) ]) + '\''
 
