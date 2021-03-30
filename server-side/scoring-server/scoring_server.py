@@ -1,5 +1,6 @@
 from data import info, scoringServer, dbInfo, getDivision, listens, divisions
 from getpass import getpass
+from json import loads
 from os import path
 import socket, pymongo, threading, datetime
 
@@ -27,23 +28,22 @@ def dbConnect(connInfo):
     return conn
 
 def handleImage(connection, connInfo):
-    msg = connection.recv(512).decode("utf-8")
+    msg = connection.recv(1024).decode("utf-8")
     connection.close()
 
-    imageInfo = msg.split()
-    imageInfo = {
-        'teamID' : str(imageInfo[0]),
-        'division' : getDivision(str(imageInfo[0]))
-        'imageID' : str(imageInfo[1]),
-        'os' : str(imageInfo[2]),
+    imageInfo = loads(msg)
+    imageInfo.update({
+        'division' : getDivision(str(imageInfo[0])),
         'startTime' : 
             datetime.datetime.fromtimestamp( 
-                float(imageInfo[3])
+                imageInfo['startTime']
             ), # produces datetime.datetime object 
-        'score' : int(imageInfo[4]),
-        'vulnsFound' : int(imageInfo[5]),
+        'score' : int(imageInfo['score']),
+        'vulnsFound' : int(imageInfo['vulnsFound']),
+        'maxVulns' : int(imageInfo['maxVulns']),
+        'foundPens' : int(imageInfo['foundPens']),
         'timestamp' : datetime.datetime.utcnow()#.timestamp()
-    }
+    })
     print(f"Received packet from image {imageInfo['imageID']}")
     # print(f"Recieved \t {msg}")
     
@@ -110,6 +110,8 @@ def handleImage(connection, connInfo):
                     # set the score for the image 
                     'score' : imageInfo['score'],
                     'vulns' : imageInfo['vulnsFound'],
+                    'pens' : imageInfo['foundPens'],
+                    'maxVulns' : imageInfo['maxVulns'],
                     # and set the times
                     'startTime' : imageInfo['startTime'],
                     'endTime' : imageInfo['timestamp']

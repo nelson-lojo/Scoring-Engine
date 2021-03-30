@@ -1,6 +1,6 @@
 import os
 from socket import socket, AF_INET, SOCK_STREAM
-from json import loads
+from json import loads, dumps
 from threading import Thread
 from datetime import datetime
 from time import sleep
@@ -256,12 +256,20 @@ class scoredItems:
         finally:
             template.close()
 
-def uploadState(teamID, imID, vmOS, startTime, score, foundVulns):
+def uploadState(teamID, imID, vmOS, startTime, score, foundVulns, maxVulns, foundPens):
     localSocket = socket(AF_INET, SOCK_STREAM)
     try:
         localSocket.connect(startingInfo['scoring'])
-
-        msg = f"{teamID} {imID} {vmOS} {startTime} {score} {foundVulns}"
+        msg = json.dumps({
+            'teamID' : teamID,
+            'imageID' : imID,
+            'os' : vmOS,
+            'startTime' : startTime,
+            'score' : score,
+            'vulnsFound' : foundVulns,
+            'maxVulns' : maxVulns,
+            'foundPens' : foundPens 
+        })
         print(f"sending message '{msg}' to {startingInfo['scoring'][0]}:{startingInfo['scoring'][1]}")
         localSocket.send(bytes(msg, "utf-8"))
         print(f"\tsent!")
