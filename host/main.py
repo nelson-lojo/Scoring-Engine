@@ -12,14 +12,14 @@ import tkinter
 
 startingInfo = {
     'logo' : "MarvinLogo",
-    'key' : b'Die-go is hella gay lmao', 
-    'keyLength' : 16, # must be 16, 24, or 32 
-    'vulnNonce' : b'\xd0\x7b\x29\x9f\x37\xda\x79\x1c\x95\x91\x6a\xd9\x30\x7a\x1f\x13',     # change everytime the encryption is done again
-    'penNonce' : b'\x09\x0f\xff\xdc\x27\xff\x31\x04\x84\x6f\x49\x36\x5d\xc1\x3e\x9b',      # change everytime the encryption is done again
+    'key' : b'hi',
+    'keyLength' : 16, # must be 16, 24, or 32
+    'vulnNonce' : b'\x6c\xfb\x61\x6b\xf3\xee\xa2\xbd\x45\xb6\xf2\x65\xe6\xf5\xd2\xbd',     # change everytime the encryption is done again
+    'penNonce' : b'\x67\x74\x41\xb1\xd9\xb7\x94\xd3\x90\x0e\xec\xf7\xf7\x0d\x3d\x94',      # change everytime the encryption is done again
     'engineRoot' : 'home/jeremy/Documents/Scoring-Engine/host/',  # the path to the application's root from system root
     'scoring' : ('3.17.56.167', int('6969')),
-    'os' : 'GenericSystem20.04',     # cannot have spaces
-    'round' : "Practice Round"       # purely visual, but should also 
+    'os' : 'Windows10',     # cannot have spaces
+    'round' : "Practice Round"       # purely visual, but should match
 }
 
 assert startingInfo['key'], "Encryption key cannot be empty"
