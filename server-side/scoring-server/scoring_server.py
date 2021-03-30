@@ -45,8 +45,9 @@ def handleImage(connection, connInfo):
     }
     print(f"Received packet from image {imageInfo['imageID']}")
     print(f"Recieved \t{msg}")
-    if imageInfo['startTime'] - (time:= datetime.datetime.now()) > info['timingTolerance']:
-        print(f"Start time for image {imageInfo['imageID']} was spoofed to be {imageInfo['startTime']} at {datetime.datetime.now()}, exceeding the tolerance of {info['timingTolerance']}")
+    now = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
+    if imageInfo['startTime'] - now > info['timingTolerance']:
+        print(f"Start time for image {imageInfo['imageID']} was spoofed to be {imageInfo['startTime']} at {now}, exceeding the tolerance of {info['timingTolerance']}")
         return 
 
     # create a new client for each image connection
