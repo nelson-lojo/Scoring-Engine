@@ -36,7 +36,7 @@ def handleImage(connection, connInfo):
         'division' : getDivision(str(imageInfo['teamID'])),
         'startTime' : 
             datetime.datetime.fromtimestamp( 
-                imageInfo['startTime']
+                float(imageInfo['startTime'])
             ), # produces datetime.datetime object 
         'score' : int(imageInfo['score']),
         'vulnsFound' : int(imageInfo['vulnsFound']),
