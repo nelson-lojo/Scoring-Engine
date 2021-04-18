@@ -28,24 +28,21 @@ assert startingInfo['key'], "Encryption key cannot be empty"
 assert startingInfo['keyLength'] in [16, 24, 32], "Key length must be 16, 24, or 32"
 startingInfo['key'] = (startingInfo['key']*startingInfo['keyLength'])[:startingInfo['keyLength']]
 
-logo = startingInfo['logo']
-engineRoot = startingInfo['engineRoot']
-
 if os.name=='nt':
     from win10toast import ToastNotifier
-    engineRoot = f"C:/{engineRoot}"
-    logo += '.ico'
+    startingInfo['engineRoot'] = f"C:/{startingInfo['engineRoot']}"
+    startingInfo['logo'] = f'{startingInfo['engineRoot']}{startingInfo['logo']}.ico'
 
     def banner(message):
         (ToastNotifier()).show_toast(
-            "PolyCP Engine", message, icon_path=(engineRoot + logo))
+            "PolyCP Engine", message, icon_path=startingInfo['logo'])
 elif os.name=='posix':
-    engineRoot = f"/{engineRoot}"
-    logo += '.png'
+    startingInfo['engineRoot'] = f"/{startingInfo['engineRoot']}"
+    startingInfo['logo'] = f'{startingInfo['engineRoot']}{startingInfo['logo']}.png'
 
     def banner(message):
         os.system(
-            f"notify-send 'PolyCP Engine' '{message}' -i '{engineRoot + logo}'")
+            f"notify-send 'PolyCP Engine' '{message}' -i '{startingInfo['logo']}'")
 
 def play(path):
     soundThread = Thread(target=playsound, args=(path, ))
@@ -69,7 +66,7 @@ def log(content, error=''):
 def getTeamID():
     window = tkinter.Tk()
     window.geometry("350x100")
-    #window.iconbitmap(engineRoot + startingInfo['logo'] + '.ico')
+    # window.iconbitmap(startingInfo['logo']) # used to be the `.ico`
     window.title("Enter your Team ID")
     window.resizable(0,0)
     
@@ -110,7 +107,7 @@ class machine:
         self.imageID = None
         self.Vulns = []
         self.Penalties = []
-
+    
         # setting the image start time
         if not os.path.isfile(engineRoot + "image.dat"):
             persistentData = open( (engineRoot + "image.dat"), "w")
@@ -118,17 +115,15 @@ class machine:
                 persistentData.write(str(datetime.now().timestamp()) + '\n')
                 persistentData.write(getTeamID() + '\n')
             except:
-                log("Could not write image image data to file")
+                log("Could not save image data")
             finally:
                 persistentData.close()
-        persistentData = open( (engineRoot + "image.dat"), "r")
-        try:
-            self.startTime = persistentData.readline().replace('\n', '')
-            self.teamID = persistentData.readline().replace('\n', '')
-        except:
-            log("Could not read image data.")
-        finally:
-            persistentData.close()
+        with open( (engineRoot + "image.dat"), "r") as persistentData:
+            try:
+                self.startTime = persistentData.readline().replace('\n', '')
+                self.teamID = persistentData.readline().replace('\n', '')
+            except:
+                log("Could not read image data.")
 
         # create a unique image ID to detect multiple instances
         self.imageID = sha512(
