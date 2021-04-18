@@ -5,18 +5,20 @@ from threading import Thread
 from datetime import datetime
 from time import sleep
 from hashlib import sha512
+from base64 import b64decode
 
 from playsound import playsound
 from Cryptodome.Cipher import AES
+from Cryptodome.Util.padding import unpad
 import tkinter
 
 startingInfo = {
     'logo' : "MarvinLogo",
-    'key' : b'hi',
+    'key' : 'ABCabc123==',
     'keyLength' : 16, # must be 16, 24, or 32
-    'vulnNonce' : b'\x6c\xfb\x61\x6b\xf3\xee\xa2\xbd\x45\xb6\xf2\x65\xe6\xf5\xd2\xbd',     # change everytime the encryption is done again
-    'penNonce' : b'\x67\x74\x41\xb1\xd9\xb7\x94\xd3\x90\x0e\xec\xf7\xf7\x0d\x3d\x94',      # change everytime the encryption is done again
-    'engineRoot' : 'home/jeremy/Documents/Scoring-Engine/host/',  # the path to the application's root from system root
+    'vulnIV' : 'ABCabc123==', # change everytime the encryption is done again
+    'penIV' : 'ABCabc123==', # change everytime the encryption is done again
+    'engineRoot' : 'ScoringEngine/',  # the path to the application's root from system root
     'scoring' : ('3.17.56.167', int('6969')),
     'os' : 'Windows10',     # cannot have spaces
     'round' : "Practice Round"       # purely visual, but should match
@@ -50,20 +52,19 @@ def play(path):
     soundThread.start()
 
 def log(content, error=''):
-    logFile = open(engineRoot + "log.txt", "a")
+    def event(content, f):
+        f.write(content)
 
-    def event(content):
-        logFile.write(content)
+    def fatalError(content, f):
+        f.write(f"Engine exiting due to fatal error: {content}" )
 
-    def fatalError(content):
-        logFile.write(f"Engine exiting due to fatal error: {content}" )
+    entries = { 
+        '' : event,
+        'ferror' : fatalError 
+    }
 
-    contentKey = { 
-                    '' : event,
-                    'ferror' : fatalError 
-                 }
-    contentKey[error]()
-    logFile.close()
+    with open(engineRoot + "log.txt", "a") as logFile:
+        entries[error](content, logFile)
 
 def getTeamID():
     window = tkinter.Tk()
@@ -136,12 +137,14 @@ class machine:
                 )).hexdigest()
 
         # loading in vulns
-        vulnFile = open(vulnPath, 'rb')
-        vulnData = ( AES.new(startingInfo['key'], AES.MODE_EAX, nonce=startingInfo['vulnNonce']) 
-                        ).decrypt(vulnFile.read())
-        vulnFile.close()
+        with open(vulnPath, 'rb') as vulnFile:
+            vulnData = unpad(
+                (AES.new(b64decode(startingInfo['key']), AES.MODE_CBC, b64decode(startingInfo['vulnIV'])))
+                    .decrypt(data), 
+                AES.block_size
+            ).decode('ascii')
         try:
-            vulns = loads(vulnData.decode("utf-8"))
+            vulns = loads(vulnData)
             for vuln in vulns:
                 self.Vulns.append(vuln)
                 self.maxScore += vuln["value"]
@@ -151,12 +154,14 @@ class machine:
             exit()
 
         # loading in penalties
-        penFile = open(penaltyPath, 'rb')
-        penData = ( AES.new(startingInfo['key'], AES.MODE_EAX, nonce=startingInfo['penNonce']) 
-                    ).decrypt(penFile.read())
-        penFile.close()
+        with open(penaltyPath, 'rb') as penFile:
+            penData = unpad(
+                (AES.new(b64decode(startingInfo['key']), AES.MODE_CBC, b64decode(startingInfo['penIV'])))
+                    .decrypt(data), 
+                AES.block_size
+            ).decode('ascii')
         try:
-            penalties = loads(penData.decode("utf-8"))
+            penalties = loads(penData)
             for penalty in penalties:
                 self.Penalties.append(penalty)
             del penalties
