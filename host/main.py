@@ -18,7 +18,7 @@ startingInfo = {
     'keyLength' : 16, # must be 16, 24, or 32
     'vulnIV' : 'ABCabc123==', # change everytime the encryption is done again
     'penIV' : 'ABCabc123==', # change everytime the encryption is done again
-    'engineRoot' : 'ScoringEngine/',  # the path to the application's root from system root
+    'engineRoot' : 'Scoring-Engine/',  # the path to the application's root from system root
     'scoring' : ('3.17.56.167', int('6969')),
     'os' : 'Windows10',     # cannot have spaces
     'round' : "Practice Round"       # purely visual, but should match
@@ -38,7 +38,7 @@ if os.name=='nt':
             "PolyCP Engine", message, icon_path=startingInfo['logo'])
 elif os.name=='posix':
     startingInfo['engineRoot'] = f"/{startingInfo['engineRoot']}"
-    startingInfo['logo'] = f'{startingInfo['engineRoot']}{startingInfo['logo']}.png'
+    startingInfo['logo'] = f"{startingInfo['engineRoot']}{startingInfo['logo']}.png"
 
     def banner(message):
         os.system(
@@ -107,7 +107,7 @@ class machine:
         self.imageID = None
         self.Vulns = []
         self.Penalties = []
-    
+
         # setting the image start time
         if not os.path.isfile(engineRoot + "image.dat"):
             persistentData = open( (engineRoot + "image.dat"), "w")
