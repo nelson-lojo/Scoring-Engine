@@ -5,9 +5,8 @@ from Cryptodome.Util.Padding import pad
 from Cryptodome.Random import get_random_bytes as urand
 from sys import argv
 
-assert len(argv) == 3, f"USAGE: python3 {argv[0]} <vulns file> <pens file>"
+assert len(argv) == 3, f"USAGE: python3 {argv[0]} <vulns file>"
 vulnF = argv[1]
-pensF = argv[2]
 
 def encrypt(data, key=urand(16)):
     cipher = AES.new(key, AES.MODE_CBC)
@@ -22,17 +21,8 @@ with open(vulnF, 'rb') as v:
     with open('vulns', 'wb') as v:
         v.write(vulns['data'])
 
-with open(pensF, 'rb') as p:
-    pens = encrypt(p.read())
-    with open('pens', 'wb') as p:
-        p.write(pens['data'])
-
 print(f"""
 vulns key: `{vulns['key']}`
 vulns iv: `{vulns['iv']}`
 vulns file: `vulns`
-
-pens key: `{pens['key']}`
-pens iv: `{pens['iv']}`
-pens file: `pens`
 """)

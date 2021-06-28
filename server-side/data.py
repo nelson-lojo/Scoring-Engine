@@ -1,15 +1,24 @@
+from datetime import timedelta
 info = {
-    'competitionName' : 'Practice Round',
-    'divIDLen' : 2  # must be stricly < 8
-                    # the shorter it is, 
+    'competitionName' : 'PracticeRound',
+    'divIDLen' : 2, # must be stricly < 8
+                    # the longer it is, 
                     #   the easier it is to 
                     #   impersonate another team
+    'maxTime' : timedelta(  # maximum time allowed to compete
+        days=0,
+        hours=6,
+        minutes=0,
+        seconds=0
+    ),
+    # this is the farthest ahead a team's start time can be ahead of now()
+    'timingTolerance' : timedelta(seconds=5)
 }
 
 # this should be a publicly accessible interface
 scoringServer = {
-    'ip' : '',
-    'port' : int(0)
+    'ip' : '0.0.0.0',
+    'port' : int(8080)
 }
 
 # this should be a publicly accessible interface
@@ -23,11 +32,11 @@ web = {
 # configure the way your organization desires 
 #   if you don't know, then leave defaults
 dbInfo = {
-    'ip' : 'locahost',
+    'ip' : '1.1.1.1',
     'port' : 27017,
-    'name' : info['competitionName'],
-    'user' : '',
-    'passwd' : '',
+    'name' : 'CyberPatriot',
+    'user' : 'sampleUser',
+    'passwd' : '', # if left blank, will be prompted on connection for password
     'authdb' : 'admin'
 }
 
@@ -39,8 +48,8 @@ divisions = {
     #           implemented in getDivision())
     # 'image OS #' should have no spaces 
     #       this should also be the value in startingInfo['os'] on an image
-    'Division 1 ID' : 0,#(numOfTeams, 'image OS 1', 'image OS 2'),
-    'Division 2 ID' : 0,#(numOfTeams, 'image OS 1', 'image OS 2', 'image OS 3')
+    'Gold_ID' : (20, 'Windows10', 'Ubuntu16.04'),
+    'Plat_XY' : (30, 'Windows10', 'Ubuntu16.04', 'WindowsServer2012R2')
 }
 
 def getDivision(teamID):

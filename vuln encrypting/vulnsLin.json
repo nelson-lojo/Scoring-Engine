@@ -1,0 +1,21 @@
+{
+    "vulns" : [
+        {
+            "test"  : ["/bin/bash -c \"echo hi\"", "hi"],
+            "title" : "Echo command is functional",
+            "value" : 1
+        }, {
+            "test"  : ["/bin/bash -c \"sha1sum /path/to/forensic | cut -d' ' -f1\"", "da39a3ee5e6b4b0d3255bfef95601890afd80709"],
+            "title" : "Forensics Question X answered",
+            "value" : 15
+        }
+    ],
+
+    "pens" : [
+        {
+            "test"  : ["/bin/bash -c \"[ ! -f /path/to/forensic ] && echo 1\"", "1"],
+            "title" : "Forensics Question X has been deleted",
+            "value" : 5
+        }
+    ]
+}

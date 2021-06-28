@@ -138,4 +138,4 @@ def serveScoreInfo(teamid):
 
 
 if __name__ == "__main__":
-    app.run(host=web['ip'], port=web['port'], debug=True)#, reloader=True) 
+    app.run(host=web['ip'], port=web['port'])#, reloader=True) 

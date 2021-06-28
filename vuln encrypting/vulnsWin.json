@@ -1,0 +1,21 @@
+{
+    "vulns" : [
+        {
+            "test"  : ["powershell -c \"(glu | ? {$_.Name -eq 'nalso'}).enabled\"", "True"],
+            "title" : "User GWhite is enabled",
+            "value" : 10
+        }, {
+            "test"  : ["powershell -c \"-not (glu administrator).enabled\"", "False"],
+            "title" : "Removed Unauthorized Admin",
+            "value" : 15
+        }
+    ],
+
+    "pens" : [
+        {
+            "test"  : ["powershell -c \"(glu | ? {$_.Name -eq 'gwhite' -and $_.Enabled -eq $true} | measure).count\"", "0"],
+            "title" : "User gwhite has been removed",
+            "value" : 10
+        }
+    ]
+}

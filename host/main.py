@@ -15,18 +15,17 @@ import tkinter
 startingInfo = {
     'logo' : "MarvinLogo",
     'key' : 'ABCabc123==',
-    'keyLength' : 16, # must be 16, 24, or 32
     'vulnIV' : 'ABCabc123==', # change everytime the encryption is done again
-    'penIV' : 'ABCabc123==', # change everytime the encryption is done again
     'engineRoot' : 'Scoring-Engine/',  # the path to the application's root from system root
-    'scoring' : ('3.17.56.167', int('6969')),
-    'os' : 'Windows10',     # cannot have spaces
-    'round' : "Practice Round"       # purely visual, but should match
+    'scoring' : ('Insert IP of server running scoring_server.py', int('27017')),
+    'os' : 'Insert OS Name (no spaces)',
+    'round' : "Enter Round Name Here"    # purely visual, should match title shown to public
 }
 
+startingInfo['keyLength'] = 16
 assert startingInfo['key'], "Encryption key cannot be empty"
 assert startingInfo['keyLength'] in [16, 24, 32], "Key length must be 16, 24, or 32"
-startingInfo['key'] = (startingInfo['key']*startingInfo['keyLength'])[:startingInfo['keyLength']]
+startingInfo['key'] = (startingInfo['key'] * startingInfo['keyLength'])[:startingInfo['keyLength']]
 
 if os.name=='nt':
     from win10toast import ToastNotifier
@@ -97,7 +96,7 @@ def getTeamID():
 
 class machine:
     def __init__(self, imSystem="", round="Practice Round", 
-            vulnPath=(engineRoot + "vulns"), penaltyPath=(engineRoot + "penalties")):
+            vulnPath=(engineRoot + "vulns")):
         self.imageSystem = imSystem
         self.round = round
         self.maxScore = 0
@@ -131,7 +130,7 @@ class machine:
                 f"{self.imageSystem}{self.teamID}{self.startTime}","utf-8"
                 )).hexdigest()
 
-        # loading in vulns
+        # loading in scoring criteria
         with open(vulnPath, 'rb') as vulnFile:
             vulnData = unpad(
                 (AES.new(b64decode(startingInfo['key']), AES.MODE_CBC, b64decode(startingInfo['vulnIV'])))
@@ -140,29 +139,15 @@ class machine:
             ).decode('ascii')
         try:
             vulns = loads(vulnData)
-            for vuln in vulns:
-                self.Vulns.append(vuln)
-                self.maxScore += vuln["value"]
-            del vulns
         except: 
             log("Vuln data is not in JSON format", 'ferror')
             exit()
 
-        # loading in penalties
-        with open(penaltyPath, 'rb') as penFile:
-            penData = unpad(
-                (AES.new(b64decode(startingInfo['key']), AES.MODE_CBC, b64decode(startingInfo['penIV'])))
-                    .decrypt(data), 
-                AES.block_size
-            ).decode('ascii')
-        try:
-            penalties = loads(penData)
-            for penalty in penalties:
-                self.Penalties.append(penalty)
-            del penalties
-        except: 
-            log("Penalty data is not in JSON format")
-            exit()
+        for vuln in vulns['vulns']:
+            self.Vulns.append(vuln)
+            self.maxScore += vuln["value"] 
+        for penalty in penalties:
+            self.Penalties.append(penalty)
 
     def check(self, test):
         return f"{test[1]}\n" == os.popen(test[0]).read()
@@ -310,31 +295,3 @@ while True:
         (scoredItems.Gain - scoredItems.Loss), len(scoredItems.Vulns),
         len(vm.Vulns), len(scoredItems.Penalties))
     sleep(30)
-
-#####
-    # [
-    #  {
-    #    "test": ["powershell -c \"(glu nalso).enabled\"", "True"],
-    #    "title": "User Nasloon is enabled",
-    #    "value": 10
-    #  },
-    #  {
-    #    "test": ["powershell -c \''\", ""],
-    #    "title": "",
-    #    "value": 10
-    #  },
-    #  {
-    #    "test": ["powershell -c \"-not (glu administrator).enabled\"", "False"],
-    #    "title": "Removed Unauthorized Admin",
-    #    "score": 10
-    #  }
-    # ]
-
-
-    # encrypt a json file:
-    # from Cryptodome.Cipher import AES
-    # key = b'Die-go is hella gay lmao'
-    # cipher = AES.new(key, AES.MODE_EAX)
-    # (pls check nonce {cipher.nonce})
-    # ciphertext, tag = cipher.encrypt_and_digest(data_string)
-    # then write ciphertext to the file (vulns or penalties)
