@@ -151,7 +151,6 @@ def handleImage(connection, connInfo):
 
     if len(im_scores):
         query = im_scores[0]
-        # print(f"returned query: {query}")
 
         exists = bool(
             query.get('last', None) and query.get('lastLast', None)

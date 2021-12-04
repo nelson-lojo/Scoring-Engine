@@ -1,5 +1,5 @@
 import os
-from socket import socket, AF_INET, SOCK_STREAM
+from requests import post
 from json import loads, dumps
 from threading import Thread
 from datetime import datetime
@@ -16,8 +16,8 @@ startingInfo = {
     'logo' : "MarvinLogo",
     'key' : 'ABCabc123==',
     'vulnIV' : 'ABCabc123==', # change everytime the encryption is done again
-    'engineRoot' : 'Scoring-Engine/',  # the path to the application's root from system root
-    'scoring' : ('Insert IP of server running scoring_server.py', int('27017')),
+    'engineRoot' : '/Scoring-Engine/',  # the path to the application's root from system root
+    'scoring' : 'http://some.url.com/scoring/route', # web url to POST scoring data to
     'os' : 'Insert OS Name (no spaces)',
     'round' : "Enter Round Name Here"    # purely visual, should match title shown to public
 }
@@ -29,19 +29,18 @@ startingInfo['key'] = (startingInfo['key'] * startingInfo['keyLength'])[:startin
 
 if os.name=='nt':
     from win10toast import ToastNotifier
-    startingInfo['engineRoot'] = f"C:/{startingInfo['engineRoot']}"
-    startingInfo['logo'] = f'{startingInfo['engineRoot']}{startingInfo['logo']}.ico'
+    startingInfo['engineRoot'] = f"C:{startingInfo['engineRoot']}"
+    startingInfo['logo'] = f"{startingInfo['engineRoot']}{startingInfo['logo']}.ico"
 
     def banner(message):
         (ToastNotifier()).show_toast(
             "PolyCP Engine", message, icon_path=startingInfo['logo'])
 elif os.name=='posix':
-    startingInfo['engineRoot'] = f"/{startingInfo['engineRoot']}"
+    # startingInfo['engineRoot'] = f"{startingInfo['engineRoot']}"
     startingInfo['logo'] = f"{startingInfo['engineRoot']}{startingInfo['logo']}.png"
 
     def banner(message):
-        os.system(
-            f"notify-send 'PolyCP Engine' '{message}' -i '{startingInfo['logo']}'")
+        os.system(f"notify-send 'PolyCP Engine' '{message}' -i '{startingInfo['logo']}'")
 
 def play(path):
     soundThread = Thread(target=playsound, args=(path, ))
@@ -59,7 +58,7 @@ def log(content, error=''):
         'ferror' : fatalError 
     }
 
-    with open(engineRoot + "log.txt", "a") as logFile:
+    with open(startingInfo['engineRoot'] + "log.txt", "a") as logFile:
         entries[error](content, logFile)
 
 def getTeamID():
@@ -96,7 +95,7 @@ def getTeamID():
 
 class machine:
     def __init__(self, imSystem="", round="Practice Round", 
-            vulnPath=(engineRoot + "vulns")):
+            vulnPath=(startingInfo['engineRoot'] + "vulns")):
         self.imageSystem = imSystem
         self.round = round
         self.maxScore = 0
@@ -108,8 +107,8 @@ class machine:
         self.Penalties = []
 
         # setting the image start time
-        if not os.path.isfile(engineRoot + "image.dat"):
-            persistentData = open( (engineRoot + "image.dat"), "w")
+        if not os.path.isfile(startingInfo['engineRoot'] + "image.dat"):
+            persistentData = open( (startingInfo['engineRoot'] + "image.dat"), "w")
             try:
                 persistentData.write(str(datetime.now().timestamp()) + '\n')
                 persistentData.write(getTeamID() + '\n')
@@ -117,7 +116,7 @@ class machine:
                 log("Could not save image data")
             finally:
                 persistentData.close()
-        with open( (engineRoot + "image.dat"), "r") as persistentData:
+        with open( (startingInfo['engineRoot'] + "image.dat"), "r") as persistentData:
             try:
                 self.startTime = persistentData.readline().replace('\n', '')
                 self.teamID = persistentData.readline().replace('\n', '')
@@ -126,34 +125,38 @@ class machine:
 
         # create a unique image ID to detect multiple instances
         self.imageID = sha512(
-            bytes(
-                f"{self.imageSystem}{self.teamID}{self.startTime}","utf-8"
-                )).hexdigest()
+            bytes(f"{self.imageSystem}{self.teamID}{self.startTime}","utf-8")
+        ).hexdigest()
 
         # loading in scoring criteria
         with open(vulnPath, 'rb') as vulnFile:
-            vulnData = unpad(
-                (AES.new(b64decode(startingInfo['key']), AES.MODE_CBC, b64decode(startingInfo['vulnIV'])))
-                    .decrypt(data), 
+            raw_json = unpad(
+                (
+                    AES.new(
+                        b64decode(startingInfo['key']), 
+                        AES.MODE_CBC, 
+                        b64decode(startingInfo['vulnIV'])
+                    )
+                ).decrypt(vulnFile.read()), 
                 AES.block_size
             ).decode('ascii')
         try:
-            vulns = loads(vulnData)
+            data = loads(raw_json)
         except: 
             log("Vuln data is not in JSON format", 'ferror')
             exit()
 
-        for vuln in vulns['vulns']:
+        for vuln in data['vulns']:
             self.Vulns.append(vuln)
             self.maxScore += vuln["value"] 
-        for penalty in penalties:
+        for penalty in data['pens']:
             self.Penalties.append(penalty)
 
     def check(self, test):
         return f"{test[1]}\n" == os.popen(test[0]).read()
 
 vm = machine(imSystem=startingInfo['os'], round=startingInfo['round'], 
-            vulnPath=(engineRoot + "vulns"), penaltyPath=(engineRoot + "penalties"))
+            vulnPath=(startingInfo['engineRoot'] + "vulns"), penaltyPath=(startingInfo['engineRoot'] + "penalties"))
 
 class scoredItems:
     Vulns = []
@@ -241,31 +244,25 @@ class scoredItems:
         finally:
             template.close()
 
-def uploadState(teamID, imID, vmOS, startTime, score, foundVulns, maxVulns, foundPens):
-    localSocket = socket(AF_INET, SOCK_STREAM)
+def uploadState(teamID, imID, vmOS, startTime, score, foundVulns, foundPens):
+    # localSocket = socket(AF_INET, SOCK_STREAM)
+    # try:
+    #     localSocket.connect(startingInfo['scoring'])
+    data = {
+        'teamID' : teamID,
+        'imageID' : imID,
+        'os' : vmOS,
+        'startTime' : startTime,
+        'score' : score,
+        'vulns' : foundVulns,
+        'pens' : foundPens 
+    }
     try:
-        localSocket.connect(startingInfo['scoring'])
-        msg = dumps({
-            'teamID' : teamID,
-            'imageID' : imID,
-            'os' : vmOS,
-            'startTime' : startTime,
-            'score' : score,
-            'vulnsFound' : foundVulns,
-            'maxVulns' : maxVulns,
-            'foundPens' : foundPens 
-        })
-        print(f"sending message '{msg}' to {startingInfo['scoring'][0]}:{startingInfo['scoring'][1]}")
-        localSocket.send(bytes(msg, "utf-8"))
-        print(f"\tsent!")
-        if not vm.connected:
-            vm.connected = True
+        post(startingInfo['scoring'], json=dumps(data))
+        print(f"sent data {data} to {startingInfo['scoring']}")
+        return True
     except:
-        if vm.connected:
-            vm.connected = False
-    finally:
-        sleep(1)
-        localSocket.close()
+        return False
 
 while True:
     for vuln in vm.Vulns:
@@ -291,7 +288,7 @@ while True:
                 scoredItems.AddPenalty(pen)
     scoredItems.updateReport(vm)
     print(f"Calling upload function")
-    uploadState(vm.teamID, vm.imageID, vm.imageSystem, vm.startTime,
+    vm.connected = uploadState(vm.teamID, vm.imageID, vm.imageSystem, vm.startTime,
         (scoredItems.Gain - scoredItems.Loss), len(scoredItems.Vulns),
         len(vm.Vulns), len(scoredItems.Penalties))
     sleep(30)
